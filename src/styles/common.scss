@@ -1,0 +1,183 @@
+/**
+ * @des: 公共样式文件
+ */
+
+ @charset "UTF-8";
+
+ body {
+   font-size: 14px;
+   font-family: "Source Han Sans CN", "Microsoft YaHei", "微软雅黑", Helvetica, Tahoma, Arial, STXihei, "华文细黑", SimSun, "宋体", Heiti,
+     "黑体", sans-serif;
+ }
+
+ ol,
+ ul {
+   list-style: none;
+ }
+ 
+ // 清除浮动
+ .f-cb:after,
+ .f-cbli li:after {
+   display: block;
+   clear: both;
+   visibility: hidden;
+   height: 0;
+   overflow: hidden;
+   content: ".";
+ }
+ 
+ .f-cb,
+ .f-cbli li {
+   zoom: 1;
+ }
+ 
+ // 定义元素如何显示
+ .f-dib {
+   display: inline-block;
+   *display: inline;
+   *zoom: 1;
+ }
+ 
+ .f-di {
+   display: inline;
+ }
+ 
+ .f-dn {
+   display: none !important;
+ }
+ 
+ .f-db {
+   display: block;
+ }
+ 
+ .f-dt {
+   display: table;
+ }
+ 
+ .f-dtr {
+   display: table-row;
+ }
+ 
+ .f-dtc {
+   display: table-cell;
+ }
+ 
+ // 定义浮动
+ .f-fl {
+   float: left;
+ }
+ 
+ .f-fr {
+   float: right;
+ }
+ 
+ .f-fn {
+   float: none;
+ }
+ 
+ // 定义元素定位类型
+ .f-pr {
+   position: relative;
+ }
+ 
+ .f-pa {
+   position: absolute;
+ }
+ 
+ .f-pf {
+   position: fixed;
+ }
+ 
+ // 定义元素超出隐藏
+ .f-oh {
+   overflow: hidden;
+ }
+ 
+ // 定义字体相关样式
+ .f-tal {
+   text-align: left;
+ }
+ 
+ .f-tac {
+   text-align: center;
+ }
+ 
+ .f-tar {
+   text-align: right;
+ }
+ 
+ .f-fwb {
+   font-weight: bold;
+ }
+ 
+ .f-tdu,
+ .f-tdu:hover {
+   text-decoration: underline;
+ }
+ 
+ .f-tdn,
+ .f-tdn:hover {
+   text-decoration: none;
+ }
+ 
+ // 溢出单行文本显示省略号
+ .f-toe {
+   overflow: hidden;
+   word-wrap: normal;
+   white-space: nowrap;
+   text-overflow: ellipsis;
+   -o-text-overflow: ellipsis;
+ }
+ 
+ // 溢出文本强制换行
+ .f-pre {
+   overflow: hidden;
+   text-align: left;
+   white-space: pre-wrap;
+   word-wrap: break-word;
+   word-break: break-all;
+ }
+ 
+ // 定义鼠标悬浮样式
+ .f-csp {
+   cursor: pointer;
+ }
+ 
+ // 定义子元素垂直显示样式
+ .f-vat,
+ .f-vata * {
+   vertical-align: top;
+ }
+ 
+ .f-vab,
+ .f-vaba * {
+   vertical-align: bottom;
+ }
+ 
+ .f-vam,
+ .f-vama * {
+   vertical-align: middle;
+ }
+ 
+ // 表格布局固定
+ .f-tlf {
+   table-layout: fixed;
+ }
+ 
+ // 溢出弹性滚动
+ .f-ot {
+   overflow-y: auto;
+   -webkit-overflow-scrolling: touch;
+ }
+ 
+ /**
+   * 定位居中
+   */
+ .f-poc {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   -webkit-transform: translate(-50%, -50%);
+ }
+ 
