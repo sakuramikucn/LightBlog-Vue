@@ -20,7 +20,7 @@
           :page-size="10"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
-          hide-on-single-page="true"
+          :hide-on-single-page="true"
         >
         </el-pagination>
       </el-col>
@@ -86,6 +86,5 @@ export default {
 <style lang="scss" scoped >
 .container {
   margin: 30px 20px;
-  min-height: 77vh;
 }
 </style>

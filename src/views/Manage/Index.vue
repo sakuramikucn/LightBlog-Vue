@@ -1,6 +1,6 @@
 <template>
   <div>
-      管理页面
+      <router-view/>
   </div>
 </template>
 

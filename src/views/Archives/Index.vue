@@ -1,19 +1,18 @@
 <template>
   <div>
-      <!-- 导航 -->
-    <c-header />
+    <div class="archives-container"></div>
   </div>
 </template>
 
 <script>
-import Header from 'components/Header/Index'
 export default {
-components: {
-        'c-header': Header
-    }
+  components: {},
 }
 </script>
 
 <style>
-
+.archives-container {
+  min-height: 85vh;
+  background: var(--color-bg);
+}
 </style>

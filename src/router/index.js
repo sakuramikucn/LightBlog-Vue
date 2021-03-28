@@ -3,13 +3,90 @@ import {
   createWebHistory
 } from 'vue-router'
 
-const homeRoutes = [{
+const homeRoutes = [
+  {
     path: '/',
-    name: 'Main',
-    component: () => import('../views/Main/Index.vue'),
+    name: 'Index',
+    component: () => import('../views/Index/Index.vue'),
     meta: {
       title: '首页 | Light'
-    }
+    },
+    children: [
+      {
+        path: '/',
+        name: 'Main',
+        component: () => import('../views/Main/Index.vue'),
+        meta: {
+          title: '首页 | Light'
+        }
+      },
+      {
+        path: '/article/:id',
+        component: () => import('../views/Article/Index.vue'),
+        meta: {
+          title: '文章 | Light'
+        },
+        props: route => ({
+          id: route.query.id
+        })
+      },
+      {
+        path: '/category',
+        name: 'Category',
+        component: () => import('../views/Category/Index.vue'),
+        meta: {
+          title: '分类 | Light'
+        },
+        children: [{
+          path: '/category/:id', //动态路由，具体分类
+          name: 'CategoryDetail',
+          component: () => import('../views/Category/Child/Index.vue'),
+          meta: {
+            title: '分类 | Light'
+          }
+        }]
+      },
+      {
+        path: '/tags',
+        name: 'Tags',
+        component: () => import('../views/Tag/Index.vue'),
+        meta: {
+          title: '标签 | Light'
+        }
+      },
+      {
+        path: '/archives',
+        name: 'Archives',
+        component: () => import('../views/Archives/Index.vue'),
+        meta: {
+          title: '归档 | Light'
+        }
+      },
+      {
+        path: '/message',
+        name: 'MessageBoard',
+        component: '../views/Message/Index.vue',
+        meta: {
+          title: '留言板 | Light'
+        }
+      },
+      {
+        path: '/link',
+        name: 'Link',
+        component: () => import('../views/Link/Index.vue'),
+        meta: {
+          title: '友情链接 | Light'
+        }
+      },
+      {
+        path: '/about',
+        name: 'About',
+        component: () => import('../views/About/Index.vue'),
+        meta: {
+          title: '关于 | Light'
+        }
+      }
+    ]
   },
   {
     path: '/index',
@@ -18,72 +95,7 @@ const homeRoutes = [{
       title: '首页 | Light'
     }
   },
-  {
-    path: '/article/:id',
-    component: () => import('../views/Article/Index.vue'),
-    meta: {
-      title: '文章 | Light'
-    },
-    props: route => ({
-      id: route.query.id
-    })
-  },
-  {
-    path: '/category',
-    name: 'Category',
-    component: () => import('../views/Category/Index.vue'),
-    meta: {
-      title: '分类 | Light'
-    },
-    children: [{
-      path: '/category/:id', //动态路由，具体分类
-      name: 'CategoryDetail',
-      component: () => import('../views/Category/Child/Index.vue'),
-      meta: {
-        title: '分类 | Light'
-      }
-    }]
-  },
-  {
-    path: '/tags',
-    name: 'Tags',
-    component: () => import('../views/Tag/Index.vue'),
-    meta: {
-      title: '标签 | Light'
-    }
-  },
-  {
-    path: '/archives',
-    name: 'Archives',
-    component: () => import('../views/Archives/Index.vue'),
-    meta: {
-      title: '归档 | Light'
-    }
-  },
-  {
-    path: '/message',
-    name: 'MessageBoard',
-    component: '../views/Message/index.vue',
-    meta: {
-      title: '留言板 | Light'
-    }
-  },
-  {
-    path: '/link',
-    name: 'Link',
-    component: () => import('../views/Link/Index.vue'),
-    meta: {
-      title: '友情链接 | Light'
-    }
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: '../views/About/Index.vue',
-    meta: {
-      title: '关于 | Light'
-    }
-  }
+  
 ]
 
 const adminRoutes = [{

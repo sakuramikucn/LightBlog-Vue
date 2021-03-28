@@ -1,51 +1,32 @@
 <template>
   <div class="message-page">
-    <div>
-      <!-- 导航 -->
-    <c-header />
-  </div>
-    <section class="content">
-      <div v-if="data.length === 0">空无一物，就像你我一样。</div>
-      <template v-else>
-        <div v-for="(item, index) in data" :key="index" class="item">
-          <div class="text" v-html="item.contentHtml"></div>
-          <div class="time">{{ item.time }}</div>
-        </div>
-      </template>
-    </section>
+    <div class="message-container"></div>
   </div>
 </template>
 
 <script>
-import { toRefs, reactive, defineComponent, onMounted } from 'vue'
-import Header from 'components/Header/Index'
+import { toRefs, reactive } from "vue";
 
-export default({
+export default {
   components: {
-        'c-header': Header
-    },
+  },
   setup() {
     const state = reactive({
-      data: []
-    })
-
-    const getData = async () => {
-      const res = []
-      state.data = res.body.data
-    }
-
-    onMounted(() => {
-      // getData()
-    })
+      data: [],
+    });
 
     return {
-      ...toRefs(state)
-    }
-  }
-})
+      ...toRefs(state),
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
+.message-container {
+  min-height: 85vh;
+  background: var(--color-bg);
+}
 .message-page {
   position: relative;
   margin: 60px auto 0;

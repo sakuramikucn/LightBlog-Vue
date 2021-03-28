@@ -38,7 +38,8 @@ export default {
     return { ...toRefs(state) };
   },
   mounted() {
-      document.title = '文章- '+this.article.title + ' | Light Blog'
+    console.log(this.article);
+    document.title = "文章- " + this.article.title + " | Light Blog";
   },
 };
 </script>

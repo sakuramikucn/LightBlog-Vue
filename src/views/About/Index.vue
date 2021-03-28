@@ -1,19 +1,21 @@
 <template>
   <div>
-      <!-- 导航 -->
-    <c-header />
+    <div class="about-container">
+
+    </div>
   </div>
 </template>
 
 <script>
-import Header from 'components/Header/Index'
 export default {
-components: {
-        'c-header': Header
-    }
-}
+  components: {
+  },
+};
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.about-container {
+  min-height: 85vh;
+  background: var(--color-bg);
+}
 </style>
