@@ -1,5 +1,6 @@
 <template>
-  <div class="login-container">
+  <div>
+    <div class="login-container">
     <el-form ref="params" :model="params" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
@@ -8,7 +9,7 @@
 
       <el-form-item prop="username">
         <span class="svg-container">
-          <svg-icon icon-class="user" />
+          
         </span>
         <el-input
           ref="username"
@@ -23,7 +24,7 @@
 
       <el-form-item prop="password">
         <span class="svg-container">
-          <svg-icon icon-class="password" />
+          
         </span>
         <el-input
           ref="password"
@@ -32,6 +33,7 @@
           name="password"
           tabindex="2"
           auto-complete="on"
+          show-password
         />
       </el-form-item>
 
@@ -39,14 +41,21 @@
 
     </el-form>
   </div>
+  <c-footer :style="'footer-manage'"></c-footer>
+  </div>
 </template>
 
 <script>
 import { login } from "api/home.js";
 import Router from '@/router'
+import Footer from "components/Footer/Index";
+import qs from 'qs'
 
 export default {
   name: "Login",
+  components: {
+    'c-footer': Footer
+  },
   data() {
     return {
       params: {
@@ -63,7 +72,8 @@ export default {
   methods: {
     login() {
       this.loading = true
-      login(this.params).then((result) => {
+      const params = qs.stringify(this.params)
+      login(params).then((result) => {
         this.loading = false;
         let token = result.content;
         localStorage.setItem("token", token);
@@ -79,7 +89,7 @@ export default {
 </script>
 
 <style lang="scss">
-$bg:#283443;
+$bg: #454545;
 $light_gray:#fff;
 $cursor: #fff;
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -118,11 +128,11 @@ $cursor: #fff;
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
+$bg: var(--color-bg-m);
 $dark_gray:#889aa4;
 $light_gray:#eee;
 .login-container {
-  min-height: 92vh;
+  min-height: 91.6vh;
   width: 100%;
   background-color: $bg;
   overflow: hidden;

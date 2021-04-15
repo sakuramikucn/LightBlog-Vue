@@ -7,3 +7,23 @@ export function login(param) {
         data: param
     })
 }
+
+export function logout(){
+    return request({
+        url: '/logout'
+    })
+}
+
+export function getViews(id) {
+    return request({
+        url: '/views/'+id,
+        method: 'GET'
+    })
+}
+
+export function incrementViews(id){
+    return request({
+        url: '/views/increment/'+id,
+        method: 'POST'
+    })
+}

@@ -3,16 +3,16 @@ import {
   createWebHistory
 } from 'vue-router'
 
-const homeRoutes = [
-  {
+import store from '../store'
+
+const homeRoutes = [{
     path: '/',
     name: 'Index',
     component: () => import('../views/Index/Index.vue'),
     meta: {
       title: '首页 | Light'
     },
-    children: [
-      {
+    children: [{
         path: '/',
         name: 'Main',
         component: () => import('../views/Main/Index.vue'),
@@ -25,10 +25,7 @@ const homeRoutes = [
         component: () => import('../views/Article/Index.vue'),
         meta: {
           title: '文章 | Light'
-        },
-        props: route => ({
-          id: route.query.id
-        })
+        }
       },
       {
         path: '/category',
@@ -50,6 +47,14 @@ const homeRoutes = [
         path: '/tags',
         name: 'Tags',
         component: () => import('../views/Tag/Index.vue'),
+        meta: {
+          title: '标签 | Light'
+        }
+      },
+      {
+        path: '/tag/:id',
+        name: 'Tag',
+        component: () => import('../views/Tag/Child/Index.vue'),
         meta: {
           title: '标签 | Light'
         }
@@ -95,25 +100,82 @@ const homeRoutes = [
       title: '首页 | Light'
     }
   },
-  
+
 ]
 
-const adminRoutes = [{
-  path: '/login',
-  name: 'Login',
-  component: () => import('../views/Login/Index.vue'),
-  meta: {
-    title: '登录 | Light'
+const adminRoutes = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/Login/Index.vue'),
+    meta: {
+      title: '登录 | Light'
+    }
+  },
+  {
+    path: '/manage',
+    name: 'Manage',
+    component: () => import('../views/Manage/Index.vue'),
+    meta: {
+      title: '管理 | Light'
+    },
+    redirect: '/manage/index',
+    children: [
+      {
+        path: '/manage/index',
+        name: 'ManageIndex',
+        component: () => import('../views/Manage/Child/Index.vue')
+      },
+      {
+        path: '/manage/article/list',
+        nama: 'ArticleListView',
+        component: () => import('../views/Manage/Child/ArticleListView.vue')
+      },
+      {
+        path: '/manage/article/edit/:id',
+        nama: 'EditArticleView',
+        component: () => import('../views/Manage/Child/EditArticleView.vue')
+      },
+      {
+        path: '/manage/user/list',
+        name: 'UserListView',
+        component: () => import('../views/Manage/Child/UserListView.vue')
+      },
+      {
+        path: '/manage/role/list',
+        name: 'RoleView',
+        component: () => import('../views/Manage/Child/RoleView.vue')
+      },
+      {
+        path: '/manage/right/list',
+        name: 'RightView',
+        component: () => import('../views/Manage/Child/RightView.vue')
+      },
+      {
+        path: '/manage/log/list',
+        name: 'LogView',
+        component: () => import('../views/Manage/Child/LogView.vue')
+      },
+      {
+        path: '/manage/tag/list',
+        name: 'TagsView',
+        component: () => import('../views/Manage/Child/TagsView.vue')
+      },
+      {
+        path: '/manage/category/list',
+        name: 'CategoryListView',
+        component: () => import('../views/Manage/Child/CategoryList.vue')
+      },
+    ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: '404',
+    component: () => import('../views/Error/404.vue'),
+    meta: {
+      title: '无此页面 | Light'
+    }
   }
-}, 
-{
-  path: '/manage',
-  name: 'Manage',
-  component: () => import('../views/Manage/Index.vue'),
-  meta: {
-    title: '管理 | Light'
-  }
-}
 ]
 
 const routes = homeRoutes.concat(adminRoutes)
@@ -128,7 +190,8 @@ const router = createRouter({
  */
 router.beforeEach((to, from, next) => {
   const {
-    meta
+    meta,
+    path
   } = to
   if (meta) {
     for (let name in meta) {
@@ -137,7 +200,33 @@ router.beforeEach((to, from, next) => {
   } else {
     document.title = 'Light Blog'
   }
+  if(isNavPath(path)){
+    store.state.isActive = true
+  }else{
+    store.state.isActive = false
+  }
   next()
 })
+
+const navs = [
+  '/',
+  '/tags',
+  '/category',
+  '/link',
+  '/archives',
+  '/message',
+  '/about'
+]
+
+const isNavPath = (path) => {
+  for (let index in navs) {
+    const item = navs[index]
+    if(item === path){
+      return true
+    }
+  }
+  return false
+}
+
 
 export default router

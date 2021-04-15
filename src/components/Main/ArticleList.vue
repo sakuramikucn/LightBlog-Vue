@@ -50,10 +50,14 @@ export default {
     });
 
     const getData = async () => {
+      state.loading = true
       await searchArticle(state.param).then((result) => {
+        state.loading = false
         state.articles = result.content.list;
         state.total = result.content.total;
-      });
+      }).catch(() => {
+        state.loading = false
+      })
     };
 
     const handleSizeChange = (val) => {
@@ -69,17 +73,11 @@ export default {
     };
 
     onMounted(() => {
-      state.loading = true;
       getData();
-      state.loading = false;
     });
 
     return { ...toRefs(state), getData, handleSizeChange, handleCurrentChange };
-  },
-  data() {
-    return {};
-  },
-  methods: {},
+  }
 };
 </script>
 

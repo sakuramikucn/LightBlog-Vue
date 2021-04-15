@@ -5,7 +5,7 @@
       <el-col :sm="20" :md="16">
         <div class="f-jsac nav hidden-xs-only">
           <!-- 导航列表 -->
-          <el-tabs v-model="tabIndex" class="tab" @tab-click="tabClick">
+          <el-tabs v-model="tabIndex" class="tab" :class="{ bottom: !isActive }" @tab-click="tabClick">
             <el-tab-pane
               v-for="(item, index) in navs"
               :key="index"
@@ -28,11 +28,17 @@
                 size="mini"
                 v-model="keyword"
                 aria-placeholder="文章标题关键字"
-              />
+              >
+
+              </el-input>
             </div>
             <!-- 登录 -->
-            <router-link to="/login">
-              <div class="login">登录</div>
+            <router-link to="/login" v-if="!user">
+              <div class="login f-jcac"><i class="iconfont icon-log-in" style="margin-right: 3px"></i>登录</div>
+            </router-link>
+            <!-- 已登录 -->
+            <router-link to="/manage/index" v-if="user">
+              <div class="login f-jcac"><i class="iconfont icon-log-in" style="margin-right: 3px"></i>后台</div>
             </router-link>
           </div>
         </div>
@@ -50,6 +56,7 @@
 import { useStore } from "vuex";
 import { toRefs, reactive } from "vue";
 import NavLink from "components/NavLink";
+import {getUser} from 'utils/common'
 
 export default {
   name: "Header",
@@ -60,13 +67,14 @@ export default {
     const store = useStore();
     const state = reactive({
       tabIndex: store.state.currentTabIndex,
+      isActive: store.state.isActive,
       vstore: store
     });
     return {
       ...toRefs(state),
       tabClick: (tab) => {
-      store.commit('changeTabIndex',tab.index)
-      }
+        store.commit("changeTabIndex", tab.index);
+      },
     };
   },
   data() {
@@ -108,8 +116,21 @@ export default {
           icon: "el-icon-user",
         },
       ],
-      keyword: "",
+      keyword: ""
     };
+  },
+  computed: {
+    monitor(){
+      return this.vstore.state.isActive
+    },
+    user(){
+      return getUser()
+    }
+  },
+  watch: {
+    monitor(){
+      this.isActive = this.vstore.state.isActive
+    }
   }
 };
 </script>
@@ -146,5 +167,10 @@ export default {
 }
 .tab .el-tabs__nav-wrap::after {
   position: static !important;
+}
+.bottom {
+  .el-tabs__active-bar {
+  width: 0px !important;
+}
 }
 </style>

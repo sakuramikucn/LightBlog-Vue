@@ -23,3 +23,41 @@ export function searchArticle(param) {
         params: param
     })
 }
+
+export function queryArticle(param) {
+    return request({
+        url: '/article/list',
+        method: 'post',
+        data: param
+    })
+}
+
+export function updateArticle(params){
+    return request({
+        url: '/article',
+        method: 'put',
+        data: params
+    })
+}
+
+export function removeArticle(id){
+    return request({
+        url: '/article/'+id,
+        method: 'PUT',
+    })
+}
+
+export function deleteArticle(id){
+    return request({
+        url: '/article/'+id,
+        method: 'DELETE',
+    })
+}
+
+export function addArticle(params){
+    return request({
+        url: '/article',
+        method: 'POST',
+        data: params
+    })
+}

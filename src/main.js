@@ -8,8 +8,8 @@ import './plugins/element.js'
 import installElementPlus from './plugins/element'
 import 'element-plus/lib/theme-chalk/index.css'
 import './styles/index.scss'
-import 'normalize.css';
-import 'element-plus/lib/theme-chalk/display.css';
+import 'normalize.css'
+import 'element-plus/lib/theme-chalk/display.css'
 
 const app = createApp(App)
 installElementPlus(app)

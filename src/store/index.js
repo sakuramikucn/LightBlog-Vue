@@ -3,12 +3,58 @@ import createVuexAlong from 'vuex-along'
 
 export default createStore({
   state: {
-    currentTabIndex: '0'
+    currentTabIndex: '0',
+    isActive: true,
+    tabs: [],
+    activeTabName: '/manage/index',
+    tabClosable: true
   },
   mutations: {
     changeTabIndex(state,index){
       state.currentTabIndex = index
+    },
+    changeTabActive(state,is){
+      state.isActive = is
+    },
+    addTab(state,payload){
+      const name = payload.name
+      let flag = false
+      state.tabs.forEach(tab => {
+        if(tab.name === name){
+          state.activeTabName = name
+          flag = true
+        }
+      })
+      if(!flag){
+        state.tabs.push(payload)
+      }
+      if(state.tabs.length > 1){
+        state.tabClosable = true
+      }
+    },
+    removeTab(state,targetName){
+      const tabs = state.tabs
+      let activeName = state.activeTabName
+      if (activeName === targetName) {
+        tabs.forEach((tab, index) => {
+          if (tab.name === targetName) {
+            let nextTab = tabs[index + 1] || tabs[index - 1];
+            if (nextTab) {
+              activeName = nextTab.name;
+            }
+          }
+        });
+      }
+      state.activeTabName = activeName;
+      state.tabs = tabs.filter(tab => tab.name !== targetName);
+      if(state.tabs.length === 1){
+        state.tabClosable = false
+      }
+    },
+    turnActiveTabName(state,name){
+      state.activeTabName = name
     }
+    
   },
   actions: {
   },

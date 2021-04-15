@@ -3,8 +3,12 @@
     <!-- 头部 -->
     <template #header>
       <div class="card-header">
-        <router-link :to="/article/ + data.id">
+        <router-link :to="/article/ + data.id" :style="{display: 'flex','justify-content': 'space-between'}">
           <h4>{{ data.title }}</h4>
+          <div :style="{color: '#bbb'}">
+            <i class="el-icon-view"></i>&nbsp;{{data.views}}
+            <i class="el-icon-chat-dot-round" :style="{'margin': 'auto 10px'}"></i>{{data.commentNum}}
+          </div>
         </router-link>
       </div>
     </template>
@@ -19,12 +23,12 @@
       </el-image>
       <pre class="desc">{{ data.desc }}</pre>
       <div class="category-container">
-        <span v-if="data.category === undefined"></span>
+        <i class="el-icon-collection" :style="{'margin-right': '10px'}"></i>
         <el-tag
           size="small"
           class="category"
           @click="toCategoryDetail(data.category.id)"
-          v-if="data.category !== undefined"
+          v-if="data.category"
           >{{ data.category.name }}</el-tag
         >
         <div class="author-container">
@@ -38,6 +42,7 @@
         </div>
       </div>
       <div class="tags">
+        <i class="el-icon-collection-tag" :style="{'margin-right': '10px'}"></i>
         <el-tag
           type="success"
           v-for="(item, index) in data.tags"
@@ -90,13 +95,17 @@ export default {
         },
       },
       createTime: Date,
+      views: {
+        type: Number,
+        default: 0
+      },
+      commentNum: {
+        type: Number,
+        default: 0
+      }
     },
   },
   methods: {
-    test() {
-      console.log(this.data.category);
-      console.log(this.data.category.name);
-    },
     dateFormat(date) {
       const d = new Date(date);
       return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDay();
@@ -118,6 +127,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   min-height: 40px;
+  color: #999;
   border-bottom: 1px #efefef solid;
   .category {
     margin: 0 10px;
@@ -142,6 +152,6 @@ export default {
   align-items: center;
   min-height: 30px;
   padding: 3px 0;
-  margin: 0 10px;
+  color: #999;
 }
 </style>

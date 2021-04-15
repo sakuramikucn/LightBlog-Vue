@@ -1,20 +1,19 @@
 <template>
-  <el-row type="flex" justify="center" class="footer">
+  <el-row type="flex" justify="center" class="footer" :class="style">
     <!-- <el-col hidden-xs-only :sm="2" :md="4" /> -->
     <el-col :xs="24" :sm="20" :md="16" class="content">
       <!-- 版权信息 -->
       <div class="centent-left">
         <p>
-          <span>Copyright © 2021 </span>
           <el-link :href="copyright.url" type="info" :underline="false" class="copyright">
-            {{ copyright.name }}
+            ©2021<el-divider direction="vertical"></el-divider>{{ copyright.name }}
           </el-link>
         </p>
         <p>
           <el-link :href="security.url" type="info" :underline="false">{{
             security.name
           }}</el-link>
-          |
+          <el-divider direction="vertical"></el-divider>
           <el-link :href="icp.url" type="info" :underline="false">{{
             icp.name
           }}</el-link>
@@ -24,10 +23,14 @@
       <div class="content-right">
         <el-link
           href="https://github.com/sakuramikucn"
-          icon="el-icon-link"
           type="info"
           :underline="false"
-        ></el-link>
+          target="blank"
+          style="margin-bottom: 5px"
+        ><i class="iconfont icon-github"></i></el-link>
+        <el-link href="mailto:1519381662@qq.com" :underline="false" target="blank">
+          <i class="iconfont icon-email"></i>
+        </el-link>
       </div>
     </el-col>
     <!-- <el-col hidden-xs-only :sm="2" :md="4" /> -->
@@ -37,6 +40,12 @@
 <script>
 export default {
   name: "Footer",
+  props: {
+    style: {
+      type: String,
+      default: 'footer-home'
+    }
+  },
   data() {
     return {
       copyright: {
@@ -60,11 +69,22 @@ export default {
 <style>
 .footer {
   border-top-color: #dcdfe6;
-  box-shadow: 1px -1px 2px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  color: #dcdfe6;
   padding: 8px;
   text-align: center;
   vertical-align: center;
+  min-height: 60px;
 }
+
+.footer-home {
+  box-shadow: 1px -1px 2px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+}
+
+.footer-manage {
+  background: var(--color-bg-m);
+  box-shadow: 1px -1px 2px #999;
+}
+
 .footer .content {
   display: flex;
   justify-content: center;
@@ -84,5 +104,8 @@ export default {
 }
 .content-right {
   width: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>
