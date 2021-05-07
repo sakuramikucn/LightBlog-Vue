@@ -7,7 +7,8 @@ export default createStore({
     isActive: true,
     tabs: [],
     activeTabName: '/manage/index',
-    tabClosable: true
+    tabClosable: true,
+    noKeepAliveComponent: ['EditArticleView']
   },
   mutations: {
     changeTabIndex(state,index){

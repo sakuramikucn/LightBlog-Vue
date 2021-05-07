@@ -73,16 +73,17 @@
       </el-table-column>
     </el-table>
 
-    <el-row>
-      <el-col>
+    <el-row type="flex" justify="center">
+      <el-col :span="10">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="params.page"
           :page-sizes="[5, 10, 20, 50]"
-          :page-size="10"
+          :page-size="params.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
+          background
           :hide-on-single-page="true"
         >
         </el-pagination>
@@ -130,6 +131,7 @@
 <script>
 import { Tag } from "api/main";
 import { formatDateTime } from "utils/common";
+import qs from 'qs'
 
 export default {
   name: "TagsView",
@@ -160,7 +162,7 @@ export default {
   methods: {
     getData() {
       this.loading = true;
-      Tag.search()
+      Tag.search(qs.stringify(this.params))
         .then((res) => {
           this.loading = false;
           this.data = res.content.list;

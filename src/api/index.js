@@ -11,7 +11,7 @@ import {
 } from 'utils/common'
 
 const request = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: process.env.VUE_APP_BASE_URL,
     // timeout: 10000,
 })
 

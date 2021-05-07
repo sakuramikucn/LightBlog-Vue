@@ -24,16 +24,6 @@
         </el-col>
 
         <el-col :span="6">
-          <el-form-item label="状态">
-            <el-select v-model="param.state" placeholder="请选择" size="small">
-              <el-option label="全部" :value="''"></el-option>
-              <el-option label="正常" :value="1"></el-option>
-              <el-option label="待删除" :value="2"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="6">
           <el-form-item label="权限">
             <el-select v-model="param.public" placeholder="请选择" size="small">
               <el-option label="全部" :value="''"></el-option>
@@ -117,6 +107,11 @@
         width="60"
       ></el-table-column>
       <el-table-column
+        label="回复数"
+        prop="comments"
+        width="60"
+      ></el-table-column>
+      <el-table-column
         label="作者"
         prop="author"
         min-width="50"
@@ -134,12 +129,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" width="60">
+      <!-- <el-table-column label="状态" width="60">
         <template #default="scope">
           <span v-if="scope.row.state === 1">正常</span>
           <span v-if="scope.row.state === 2">待删除</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column label="权限" width="50">
         <template #default="scope">
@@ -175,7 +170,7 @@
                 >公开</el-button
               >
             </el-col>
-            <el-col v-if="scope.row.state === 1" @click="delete scope.row.id">
+            <el-col v-if="scope.row.state === 1" @click="deleteArticle(scope.row.id)">
               <el-button type="danger" size="mini">删除</el-button>
             </el-col>
           </el-row>
@@ -183,16 +178,17 @@
       </el-table-column>
     </el-table>
 
-    <el-row>
-      <el-col>
+    <el-row type="flex" justify="center">
+      <el-col :span="10">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="param.page"
           :page-sizes="[5, 10, 20, 50]"
-          :page-size="10"
+          :page-size="param.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
+          background
           :hide-on-single-page="true"
         >
         </el-pagination>
@@ -216,7 +212,7 @@ export default {
         page: 1,
         pageSize: 10,
         keyword: "",
-        state: "",
+        state: 1,
         begin: null,
         end: null,
         order: "DESC",
@@ -232,6 +228,7 @@ export default {
     });
 
     const getData = () => {
+      state.param.state = 1
       if (state.dateRange && state.dateRange.length === 2) {
         state.param.begin = state.dateRange[0];
         state.param.end = state.dateRange[1];
@@ -315,7 +312,7 @@ export default {
         }
       });
     },
-    delete(id) {
+    deleteArticle(id) {
       removeArticle(id).then((res) => {
         if (res.code === 0) {
           if (res.content) {

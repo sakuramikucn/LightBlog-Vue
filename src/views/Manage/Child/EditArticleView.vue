@@ -2,7 +2,7 @@
   <div>
     <el-form :model="params">
       <el-row type="flex" justify="space-between">
-        <el-col :span="8">
+        <el-col :span="6">
           <el-row>
             <el-col>
               <el-form-item label="标题" prop="title">
@@ -11,7 +11,7 @@
                   placeholder="标题"
                   width="20px"
                   maxlength="50"
-                  style="width: 300px"
+                  style="width: 280px"
                   size="small"
                   show-word-limit
                 ></el-input>
@@ -27,7 +27,7 @@
                   placeholder="简介"
                   maxlength="100"
                   type="textarea"
-                  style="width: 300px"
+                  style="width: 280px"
                   :autosize="{ minRows: 2, maxRows: 4 }"
                   show-word-limit
                 ></el-input>
@@ -56,14 +56,19 @@
 
           <el-row>
             <el-col>
-              <el-form-item label="标签" prop="tags" size="small">
-                <el-select v-model="params.tags" placeholder="请选择" multiple>
+              <el-form-item label="标签" size="small">
+                <el-select
+                  v-model="params.tags"
+                  value-key="id"
+                  multiple
+                  filterable
+                  placeholder="请选择"
+                >
                   <el-option
                     v-for="item in tags"
                     :key="item.id"
                     :label="item.name"
                     :value="item"
-                    value-key="id"
                   ></el-option>
                 </el-select>
               </el-form-item>
@@ -82,8 +87,12 @@
           </el-row>
 
           <el-row type="flex" justify="center">
-            <el-col :span="12">
-              <el-button type="primary" size="small" @click="save"
+            <el-col :span="18">
+              <el-button
+                type="primary"
+                size="small"
+                @click="save"
+                :loading="saveLoading"
                 >保存</el-button
               >
               <el-button type="danger" size="small" @click="reset"
@@ -92,8 +101,8 @@
             </el-col>
           </el-row>
         </el-col>
-        <el-col :span="16" class="editor-container">
-          <el-form-item label="文章内容"> </el-form-item>
+        <el-col :span="18" class="editor-container">
+          <editor @input="handleInput" :content="params.content"></editor>
         </el-col>
       </el-row>
     </el-form>
@@ -103,18 +112,23 @@
 <script>
 import { Tag, Category } from "api/main";
 import { getArticle, updateArticle, addArticle } from "api/article";
+import Editor from "components/Editor";
 
 export default {
+  name: 'EditArticleView',
+  components: {
+    Editor,
+  },
   data() {
     return {
-      id: 0,
+      id: '',
       params: {
-        id: 0,
-        title: '',
+        id: '',
+        title: "",
         desc: "",
         tags: [],
         category: {
-          id: 0,
+          id: '',
           name: "",
         },
         content: "",
@@ -123,12 +137,12 @@ export default {
       },
       init: {
         id: this.id,
-        title: '',
+        title: "",
         desc: "",
         tags: [],
         category: {
-          id: 0,
-          name: "",
+          id: "",
+          name: ""
         },
         content: "",
         coverUrl: "",
@@ -137,48 +151,69 @@ export default {
       tags: [],
       categorys: [],
       isAdd: true,
+      md: "",
+      saveLoading: false,
     };
   },
   methods: {
+    handleInput(md) {
+      this.md = md;
+    },
     reset() {
-      console.log(this.params,this.init)
+      console.log(this.params, this.init);
       this.params = this.init;
     },
     save() {
+      this.saveLoading = true;
+      if (this.md) {
+        this.params.content = this.md;
+      }
       if (this.isAdd) {
-        addArticle(this.params).then((res) => {
-          if (res.content) {
-            this.$message.success("保存成功");
-            if (this.id) {
-              this.$store.commit(
-                "removeTab",
-                "/manage/article/edit/" + this.id
+        addArticle(this.params)
+          .then((res) => {
+            this.saveLoading = false;
+            if (res.content) {
+              this.$message.success("保存成功");
+              this.$store.commit("removeTab", "/manage/article/add");
+              setTimeout(() => {
+                this.$store.commit(
+                "addTab",
+                {
+                  name: '/manage/article/list',
+                  title: '文章列表'
+                }
               );
+              }, 200);
             } else {
-              this.$store.commit("removeTab", "/manage/article/edit");
+              this.$message.error("保存失败，请重试");
             }
-            this.$router.push("/manage/article/list");
-          } else {
-            this.$message.error("保存失败，请重试");
-          }
-        });
+          })
+          .catch(() => (this.saveLoading = false));
       } else {
-        updateArticle(this.params).then((res) => {
-          if (res.content) {
-            this.$message.success("保存成功");
-            if (this.id) {
+        updateArticle(this.params)
+          .then((res) => {
+            this.saveLoading = false;
+            if (res.content) {
+              this.$message.success("保存成功");
               this.$store.commit(
                 "removeTab",
                 "/manage/article/edit/" + this.id
               );
+              setTimeout(() => {
+                this.$store.commit(
+                "addTab",
+                {
+                  name: '/manage/article/list',
+                  title: '文章列表'
+                }
+              );
+              }, 200);
+              
             } else {
-              this.$store.commit("removeTab", "/manage/article/edit");
+              this.$message.error("保存失败，请重试");
             }
-            this.$router.push("/manage/article/list");
-          } else {
-            this.$message.error("保存失败，请重试");
-          }
-        });
+          })
+          .catch(() => (this.saveLoading = false));
       }
     },
   },
@@ -187,17 +222,17 @@ export default {
     if (this.id) {
       this.isAdd = false;
       getArticle(this.id).then((res) => {
-        const str = JSON.stringify(res.content)
+        const str = JSON.stringify(res.content);
         this.params = JSON.parse(str);
         this.init = JSON.parse(str);
       });
     }
 
-    Tag.search().then((res) => {
+    Tag.search({}).then((res) => {
       this.tags = res.content.list;
     });
 
-    Category.search().then((res) => {
+    Category.search({}).then((res) => {
       this.categorys = res.content.list;
     });
   },
@@ -207,6 +242,5 @@ export default {
 <style lang="scss" socped>
 .editor-container {
   min-height: 70vh;
-  border: mediumaquamarine 2px solid;
 }
 </style>

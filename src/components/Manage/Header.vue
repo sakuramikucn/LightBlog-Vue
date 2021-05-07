@@ -20,13 +20,23 @@
     </el-col>
     <el-col :span="4">
       <div class="info">
-        <span style="cursor: pointer; margin-right: 10px">
-          <i class="el-icon-user"></i>
-          {{ user.nickName ? user.nickName : user.username }}
-        </span>
-        <span style="cursor: pointer" @click="logout">
-          <i class="iconfont icon-log-out"></i><span>注销</span>
-        </span>
+        <el-dropdown trigger="click" size="small">
+          <span style="cursor: pointer">
+            <i class="el-icon-user"></i>
+            {{ user.nickName ? user.nickName : user.username }}
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item icon="iconfont icon-log-out" @click="logout">
+                <span>个人信息</span>
+              </el-dropdown-item>
+              <el-dropdown-item icon="iconfont icon-log-out" @click="logout">
+                <span>注销</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
     </el-col>
   </el-row>
@@ -34,7 +44,7 @@
 
 <script>
 import { logout } from "api/home";
-import {removeUser} from "utils/common"
+import { removeUser } from "utils/common";
 
 export default {
   name: "Manage-Header",
@@ -53,10 +63,10 @@ export default {
       logout().then((result) => {
         if (result.code === 0) {
           this.$message.info("注销成功");
-          removeUser()
+          removeUser();
           setTimeout(() => {
             location.href = "/login";
-          }, 2000);
+          }, 1000);
         } else {
           this.$message.error("注销失败");
         }
@@ -84,10 +94,10 @@ export default {
       });
       this.paths = names;
     },
-    goHome(){
-      this.$store.commit('turnActiveTabName','/manage/index')
-      this.$router.push("/manage/index")
-    }
+    goHome() {
+      this.$store.commit("turnActiveTabName", "/manage/index");
+      this.$router.push("/manage/index");
+    },
   },
   data() {
     return {
@@ -118,6 +128,7 @@ export default {
   padding: 10px 25px;
   text-align: center;
   box-shadow: 0 2px 4px #eee;
+  background: #fff;
 
   .title {
     font-family: "微软雅黑";

@@ -59,6 +59,7 @@
 
 <script>
 import { useRouter } from "vue-router";
+import {formatDate} from 'utils/common'
 
 export default {
   name: "ArticleItem",
@@ -108,7 +109,7 @@ export default {
   methods: {
     dateFormat(date) {
       const d = new Date(date);
-      return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDay();
+      return formatDate(d)
     },
   },
 };

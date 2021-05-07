@@ -20,7 +20,7 @@
 
           <el-form-item label="状态" style="width: 300px"> 
           <el-select v-model="params.state" placeholder="状态" size="small">
-            <el-option label="全部" :value="null"></el-option>
+            <el-option label="全部" :value="''"></el-option>
             <el-option label="正常" :value="0"></el-option>
             <el-option label="冻结" :value="1"></el-option>
           </el-select>
@@ -65,7 +65,7 @@
             placement="top"
           >
             <template #reference>
-              <el-tag type="primary" size="small" style="margin-right: 3px">{{
+              <el-tag type="primary" size="small" style="margin: 0 3px 3px 0;cursor: pointer;" >{{
                 handleName(item)
               }}</el-tag>
             </template>
@@ -228,8 +228,8 @@
       </template>
     </el-dialog>
 
-    <el-row>
-      <el-col>
+    <el-row type="flex" justify="center">
+      <el-col :span="10">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
@@ -238,6 +238,8 @@
           :page-size="params.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
+          background
+          :hide-on-single-page="true"
         >
         </el-pagination>
       </el-col>
@@ -265,7 +267,7 @@ export default {
     return {
       params: {
         page: 1,
-        state: null,
+        state: '',
         pageSize: 5,
         keyword: "",
       },

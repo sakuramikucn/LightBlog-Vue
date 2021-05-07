@@ -11,6 +11,13 @@ import './styles/index.scss'
 import 'normalize.css'
 import 'element-plus/lib/theme-chalk/display.css'
 
+import moment from 'moment'
+
+// 解决 Axios 序列化date参数时区转换为UTC
+Date.prototype.toISOString = function(){
+    return moment(this).format('YYYY-MM-DD HH:mm:ss')
+}
+
 const app = createApp(App)
 installElementPlus(app)
 app.use(store)

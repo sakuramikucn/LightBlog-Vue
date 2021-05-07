@@ -70,3 +70,10 @@ export function checkUser(name){
         method: 'get'
     })
 }
+
+export function restoreUser(id){
+    return request({
+        url: '/user/restore/'+id,
+        method: 'put'
+    })
+}

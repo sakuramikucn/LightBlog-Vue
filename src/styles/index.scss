@@ -6,6 +6,7 @@
   --color-text: #666;
   --color-bg: #efefef;
   --color-bg-m: #57616e;
+  --color-bg-m1: linear-gradient( #57616e, #666);
   --font-size: 14px;
   --line-height: 1.5;
 }
@@ -42,4 +43,8 @@ a {
 
 .right {
   float: right;
+}
+
+.el-pagination {
+  margin: 20px auto 10px auto;
 }

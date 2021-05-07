@@ -4,8 +4,8 @@ export default {
     search(params) {
         return request({
             url: '/tag/search',
-            method: 'GET',
-            params: params
+            method: 'post',
+            data: params
         })
     },
     getTag(id) {

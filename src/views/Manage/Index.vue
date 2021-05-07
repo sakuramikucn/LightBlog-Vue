@@ -1,21 +1,36 @@
 <template>
   <el-container class="manage">
     <!-- 菜单栏 -->
-    <el-aside width="150px" class="aside">
-      <c-menu :menus="menus"></c-menu>
-    </el-aside>
+    <el-affix>
+      <el-aside width="150px" class="aside">
+        <c-menu :menus="menus"></c-menu>
+      </el-aside>
+    </el-affix>
 
     <!-- 内容 -->
     <el-container class="container">
       <!-- 头部 -->
-      <el-header>
-        <c-header :user="user" :menus="menus"></c-header>
-      </el-header>
+      <el-affix>
+        <el-header>
+          <c-header :user="user" :menus="menus"></c-header>
+        </el-header>
+      </el-affix>
 
-      <!-- 标签栏 -->
+      <!-- 主内容 -->
       <el-main>
-        <tabs/>
+        <!-- 标签栏 -->
+        <tabs />
+        <!-- 路由视图 -->
+        <router-view v-slot="{ Component }">
+          <transition name="router-fade" mode="out-in">
+              <keep-alive :exclude="$store.state.noKeepAliveComponent">
+                <component :is="Component"/>
+              </keep-alive>
+          </transition>
+        </router-view>
       </el-main>
+
+      <el-backtop></el-backtop>
 
       <!-- 底部 -->
       <el-footer>
@@ -31,7 +46,7 @@ import Header from "components/Manage/Header";
 import Menu from "components/Manage/Menu";
 import Tabs from "components/Manage/Tabs";
 import { getUserByToken } from "api/user";
-import {setUser,getUser} from 'utils/common'
+import { setUser, getUser } from "utils/common";
 
 export default {
   name: "Manage",
@@ -39,7 +54,7 @@ export default {
     "c-footer": Footer,
     "c-header": Header,
     "c-menu": Menu,
-    Tabs
+    Tabs,
   },
   data() {
     return {
@@ -109,7 +124,7 @@ export default {
         },
         {
           name: "回收站",
-          path: '/manage/recycle',
+          path: "/manage/recycle",
           submenus: [
             {
               name: "文章",
@@ -121,7 +136,7 @@ export default {
             },
             {
               name: "评论",
-              path: "/manage/recycle/article",
+              path: "/manage/recycle/comment",
             },
           ],
         },
@@ -130,15 +145,15 @@ export default {
   },
   mounted() {
     // 获取登录信息
-    const cache = getUser()
-    if(cache){
-      this.user = cache
-      return
+    const cache = getUser();
+    if (cache) {
+      this.user = cache;
+      return;
     }
     getUserByToken().then((result) => {
       if (result.code === 0) {
         this.user = result.content;
-        setUser(this.user)
+        setUser(this.user);
       } else {
         this.$message.error("获取用户数据失败");
       }
@@ -147,7 +162,18 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+/* 动画过程 */
+.router-fade-enter-active,
+.router-fade-leave-active {
+  transition: opacity .2s ease-in;
+}
+/* 动画起止 */
+.router-fade-enter-from,
+.router-fade-leave-to {
+  opacity: 0;
+}
+
 .manage .el-header {
   padding: 0;
   height: 50px !important;
@@ -161,6 +187,6 @@ export default {
 }
 .manage .aside {
   min-height: 100vh;
-  background: var(--color-bg-m);
+  background: var(--color-bg-m1);
 }
 </style>

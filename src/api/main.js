@@ -1,7 +1,7 @@
 import './article'
 import Category from './category'
 import Tag from './tag'
-import './comment'
+import Comment from './comment'
 import './home'
 import Log from './log'
 import Right from './right'
@@ -14,5 +14,6 @@ export {
     Log,
     Right,
     Role,
-    Link
+    Link,
+    Comment
 }

@@ -84,16 +84,17 @@
       </el-table-column>
     </el-table>
 
-    <el-row>
-      <el-col>
+    <el-row type="flex" justify="center">
+      <el-col :span="10">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="params.page"
           :page-sizes="[5, 10, 20, 50]"
-          :page-size="10"
+          :page-size="params.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
+          background
           :hide-on-single-page="true"
         >
         </el-pagination>

@@ -2,9 +2,11 @@
   <div class="menu">
     <el-menu
       :default-active="active"
-      background-color="var(--color-bg-m)"
       text-color="#fff"
+      background-color="rgba(0,0,0,0)"
+      active-color="#586"
       :router="true"
+      class="bar"
     >
       <el-menu-item index="/manage/index" @click="addTab({path: '/manage/index',name: '首页'})">
         <template #title>
@@ -70,6 +72,11 @@ export default {
 <style lang="scss">
 .menu {
   min-width: 140px;
+
+  .bar {
+    min-height: 100vh;
+    background: var(--color-bg-m1);
+  }
 
   .el-submenu {
     .el-submenu__title {

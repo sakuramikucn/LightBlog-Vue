@@ -12,6 +12,13 @@
   align-items: center;
 }
 
+.f-rowwrap {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 // flex 布局
 .flex {
   display: flex;

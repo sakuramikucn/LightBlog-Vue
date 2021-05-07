@@ -68,7 +68,7 @@ export const formatDateTime = (date) => {
     const time = new Date(date)
     const ymd = formatDate(date)
     const hours = time.getHours() > 9 ? time.getHours() : '0'+time.getHours()
-    const minutes = (time.getMonth() + 1) > 9 ? (time.getMonth() + 1) : '0'+(time.getMonth() + 1)
+    const minutes = (time.getMinutes() + 1) > 9 ? (time.getMinutes() + 1) : '0'+(time.getMinutes() + 1)
     const seconds = time.getSeconds() > 9 ? time.getSeconds() : '0' + time.getSeconds()
     return ymd + ' ' + hours + ':' + minutes + ':' + seconds
 }

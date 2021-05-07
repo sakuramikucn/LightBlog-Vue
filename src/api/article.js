@@ -61,3 +61,10 @@ export function addArticle(params){
         data: params
     })
 }
+
+export function restoreArticle(id){
+    return request({
+        url: '/article/restore/'+id,
+        method: 'put'
+    })
+}

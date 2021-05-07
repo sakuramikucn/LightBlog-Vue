@@ -54,7 +54,7 @@
 
 <script>
 import { reactive, watch, toRefs } from "vue";
-import { queryComments, addComment } from "../../api/comment";
+import { Comment } from "api/main";
 import { handleComents } from "../../utils/common";
 
 export default {
@@ -82,7 +82,7 @@ export default {
     });
 
     const getComment = () => {
-      queryComments(state.params).then((resp) => {
+      Comment.query(state.params).then((resp) => {
         if (resp.code === 0) {
           state.comments = resp.content;
           context.emit("getCommentSize", state.comments.length);
@@ -128,7 +128,7 @@ export default {
       if (parentId) {
         this.commentParams.parentId = parentId;
       }
-      addComment(this.commentParams).then((res) => {
+      Comment.add(this.commentParams).then((res) => {
         if (res.code === 0) {
           this.getComment();
         } else {

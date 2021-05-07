@@ -39,13 +39,8 @@
       <el-table-column label="ID" prop="id"></el-table-column>
       <el-table-column label="名称" prop="name"></el-table-column>
       <el-table-column label="描述" prop="desc"></el-table-column>
-      <el-table-column label="规则">
-        <template #default="scope">
-          <span v-if="scope.row.rule === 0">未指定</span>
-          <span v-if="scope.row.rule === 1">允许</span>
-          <span v-if="scope.row.rule === 2">禁止</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="链接" prop="url"></el-table-column>
+      <el-table-column label="封面" prop="coverUrl"> </el-table-column>
       <el-table-column label="创建时间" min-width="90">
         <template #default="scope">
           <span>{{ formatDateTime(scope.row.createTime) }}</span>
@@ -58,7 +53,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" min-width="66">
+      <el-table-column label="操作" min-width="75">
         <template #default="scope">
           <el-row type="flex" justify="center" align="middle">
             <el-col>
@@ -68,7 +63,13 @@
                 @click="openEdit(scope.$index)"
                 >编辑</el-button
               >
-              <el-button type="danger" size="mini" @click="remove(scope.row.id)" :loading="loading">删除</el-button>
+              <el-button
+                type="danger"
+                size="mini"
+                @click="remove(scope.row.id)"
+                :loading="loading"
+                >删除</el-button
+              >
             </el-col>
           </el-row>
         </template>
@@ -94,51 +95,72 @@
 
     <el-dialog v-model="show" center destroy-on-close width="30%">
       <template #title>
-        <span v-if="isEdit">编辑权限</span>
-        <span v-else>添加权限</span>
+        <span v-if="isEdit">编辑友情链接</span>
+        <span v-else>添加友情链接</span>
       </template>
 
-      <el-form :model="right">
+      <el-form :model="link">
         <el-row>
           <el-col>
             <el-form-item label="名称">
               <el-input
-                v-model="right.name"
+                v-model="link.name"
                 placeholder="名称"
                 size="mini"
-                @blur="check"
                 style="width: 300px"
-              ></el-input><span v-loading="loading"></span>
+              ></el-input
+              ><span v-loading="inputLoading"></span>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col>
-            <el-form-item label="简介">
+            <el-form-item label="描述">
               <el-input
-                v-model="right.desc"
-                placeholder="简介"
+                v-model="link.desc"
+                placeholder="描述"
                 size="mini"
                 style="width: 300px"
-              ></el-input>
+              ></el-input
+              ><span v-loading="inputLoading"></span>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col>
-            <el-form-item label="规则">
-              <el-radio-group v-model="right.rule">
-                <el-radio :label="0">未指定</el-radio>
-                <el-radio :label="1">允许</el-radio>
-                <el-radio :label="2">禁止</el-radio>
-              </el-radio-group>
+            <el-form-item label="链接">
+              <el-input
+                v-model="link.url"
+                placeholder="url"
+                size="mini"
+                style="width: 300px"
+              ></el-input
+              ><span v-loading="inputLoading"></span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-form-item label="封面">
+              <el-input
+                v-model="link.coverUrl"
+                placeholder="封面"
+                size="mini"
+                style="width: 300px"
+              ></el-input
+              ><span v-loading="inputLoading"></span>
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
 
       <template #footer>
-        <el-button type="primary" size="mini" @click="save" :loading="loading" :disabled="disable">
+        <el-button
+          type="primary"
+          size="mini"
+          @click="save"
+          :loading="saveLoading"
+        >
           保存
         </el-button>
       </template>
@@ -147,36 +169,45 @@
 </template>
 
 <script>
-import { Right } from "api/main";
+import { Link } from "api/main";
 import { formatDateTime } from "utils/common";
+import qs from 'qs'
 
 export default {
-  name: "RightView",
+  name: "LinksView",
   data() {
     return {
       params: {
         page: 1,
         pageSize: 10,
         keyword: "",
-        userId: "",
       },
       data: [],
-      right: {
+      link: {
+        id: "",
         name: "",
         desc: "",
-        rule: 0,
+        url: "",
+        coverUrl: "",
+      },
+      init: {
+        name: "",
+        desc: "",
+        url: "",
+        coverUrl: "",
       },
       total: 0,
       loading: false,
+      inputLoading: false,
+      saveLoading: false,
       show: false,
       isEdit: true,
-      disable: true
     };
   },
   methods: {
     getData() {
       this.loading = true;
-      Right.search()
+      Link.search(qs.stringify(this.params))
         .then((res) => {
           this.loading = false;
           this.data = res.content.list;
@@ -187,9 +218,9 @@ export default {
     },
     remove(id) {
       this.loading = true;
-      Right.delete(id).then((result) => {
+      Link.delete(id).then((result) => {
         if (result.content) {
-          this.loading = false
+          this.loading = false;
           this.$message.success("操作成功");
           this.getData();
         } else {
@@ -200,18 +231,15 @@ export default {
     },
     openEdit(index) {
       const arr = this.data;
-      this.right = arr[index];
+      this.link = JSON.parse(JSON.stringify(arr[index]));
       this.show = true;
       this.isEdit = true;
     },
-    closeEdit() {
-      //   this.show = false;
-    },
     edit() {
-      this.loading = true;
-      Right.update(this.right)
+      this.saveLoading = true;
+      Link.update(this.link)
         .then((res) => {
-          this.loading = false;
+          this.saveLoading = false;
           if (res.content) {
             this.show = false;
             this.$message.success("操作成功");
@@ -219,18 +247,19 @@ export default {
           }
         })
         .catch(() => {
-          this.loading = false;
+          this.saveLoading = false;
         });
     },
     openAdd() {
       this.show = true;
       this.isEdit = false;
+      this.link = JSON.parse(JSON.stringify(this.init));
     },
     add() {
-      this.loading = true;
-      Right.add(this.right)
+      this.saveLoading = true;
+      Link.add(this.link)
         .then((res) => {
-          this.loading = false;
+          this.saveLoading = false;
           if (res.content) {
             this.$message.success("操作成功");
             this.show = false;
@@ -238,7 +267,7 @@ export default {
           }
         })
         .catch(() => {
-          this.loading = false;
+          this.saveLoading = false;
         });
     },
     save() {
@@ -247,22 +276,6 @@ export default {
       } else {
         this.add();
       }
-    },
-    check(){
-      if(!this.right.name || String(this.right.name).trim().length === 0){
-        return
-      }
-      this.loading = true;
-      Right.check(this.right.name).then(res => {
-        this.loading = false
-        if(!res.content){
-          this.disable = true
-          this.$message.warning("名称重复")
-        }else{
-          this.disable = false
-          this.loading = false
-        }
-      })
     },
     handleSizeChange(val) {
       this.params.pageSize = val;

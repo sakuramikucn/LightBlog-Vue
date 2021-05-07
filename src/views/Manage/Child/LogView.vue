@@ -8,10 +8,10 @@
     >
       <el-form :model="params" label-width="80px">
         <el-col :span="6">
-          <el-form-item label="关键字" style="width: 300px">
+          <el-form-item label="关联" style="width: 300px">
             <el-input
-              v-model="params.keyword"
-              placeholder="关键字"
+              v-model="params.ref"
+              placeholder="关联"
               style="width: 200px; margin-right: 20px"
               size="small"
             ></el-input>
@@ -19,8 +19,8 @@
         </el-col>
 
         <el-col :span="6">
-          <el-form-item label="模块" style="width: 300px">
-            <el-select v-model="params.ref" placeholder="模块" size="small">
+          <el-form-item label="分类" style="width: 300px">
+            <el-select v-model="params.category" placeholder="模块" size="small">
               <el-option
                 v-for="item in modules"
                 :key="item.ref"
@@ -68,7 +68,8 @@
       border
       size="small"
     >
-      <el-table-column label="关联" prop="reference" min-width="30"></el-table-column>
+      <el-table-column label="分类" prop="category" min-width="50"></el-table-column>
+      <el-table-column label="关联" prop="reference" min-width="70"></el-table-column>
       <el-table-column label="操作人" prop="operator" min-width="40"></el-table-column>
       <el-table-column label="行为" prop="action" min-width="40"></el-table-column>
       <el-table-column label="描述" min-width="400">
@@ -81,16 +82,16 @@
           <span>{{ formatDateTime(scope.row.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="备注" prop="note" min-width="30"></el-table-column>
+      <el-table-column label="备注" prop="note" min-width="60"></el-table-column>
     </el-table>
 
-    <el-row>
-      <el-col>
+    <el-row type="flex" justify="center">
+      <el-col :span="10">
         <el-pagination
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="params.page"
-          :page-sizes="[5, 10, 20, 50]"
+          :page-sizes="[20, 30, 50, 100]"
           :page-size="params.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -117,6 +118,7 @@ export default {
         begin: null,
         end: null,
         ref: "",
+        category: ""
       },
       data: [],
       total: 0,
@@ -163,12 +165,20 @@ export default {
           ref: "friend_link",
           name: "友链",
         },
+        {
+          ref: 'job',
+          name: '定时任务'
+        }
       ],
     };
   },
   methods: {
     getData() {
       this.loading = true;
+      if(this.dateRange && this.dateRange.length === 2){
+        this.params.begin = this.dateRange[0]
+        this.params.end = this.dateRange[1]
+      }
       Log.search(this.params)
         .then((res) => {
           this.loading = false;

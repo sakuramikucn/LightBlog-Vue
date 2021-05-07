@@ -16,15 +16,6 @@
       >
       </el-tab-pane>
     </el-tabs>
-
-    <!-- 路由视图 -->
-    <router-view v-slot="{ Component }">
-      <transition name="router-fade" mode="out-in">
-        <keep-alive>
-          <component :is="Component" />
-        </keep-alive>
-      </transition>
-    </router-view>
   </div>
 </template>
 
@@ -45,14 +36,14 @@ export default {
 
     const getData = () => {
       state.tabs = store.state.tabs;
-      const route = useRoute()
-      if(route.fullPath === '/manage/index'){
+      const route = useRoute();
+      if (route.fullPath === "/manage/index") {
         // 初始化为首页
         addTab();
-      }else{
-        const path = store.state.activeTabName
-        state.active = path
-        router.push(path)
+      } else {
+        const path = store.state.activeTabName;
+        state.active = path;
+        router.push(path);
       }
     };
 

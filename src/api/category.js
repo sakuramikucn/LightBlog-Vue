@@ -1,7 +1,7 @@
 import request from './index'
 
 export default {
-    getCategory(id) {
+    get(id) {
         return request({
             url: '/category/' + id,
             method: 'GET'
@@ -10,8 +10,8 @@ export default {
     search(params) {
         return request({
             url: '/category/search',
-            method: 'GET',
-            params: params
+            method: 'POST',
+            data: params
         })
     },
     update: params => {
@@ -30,6 +30,12 @@ export default {
         return request({
             url: '/category/' + name,
             method: 'post'
+        })
+    },
+    delete: id => {
+        return request({
+            url: '/category/'+id,
+            method: 'delete'
         })
     }
 }

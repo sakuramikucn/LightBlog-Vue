@@ -117,7 +117,7 @@ const adminRoutes = [
     name: 'Manage',
     component: () => import('../views/Manage/Index.vue'),
     meta: {
-      title: '管理 | Light'
+      title: '管理 | Light',
     },
     redirect: '/manage/index',
     children: [
@@ -134,6 +134,14 @@ const adminRoutes = [
       {
         path: '/manage/article/edit/:id',
         nama: 'EditArticleView',
+        meta: {
+          keepAlive: false
+        },
+        component: () => import('../views/Manage/Child/EditArticleView.vue')
+      },
+      {
+        path: '/manage/article/add',
+        nama: 'AddArticleView',
         component: () => import('../views/Manage/Child/EditArticleView.vue')
       },
       {
@@ -166,6 +174,36 @@ const adminRoutes = [
         name: 'CategoryListView',
         component: () => import('../views/Manage/Child/CategoryList.vue')
       },
+      {
+        path: '/manage/link/list',
+        name: 'LinkView',
+        component: () => import('../views/Manage/Child/LinkView.vue')
+      },
+      {
+        path: '/manage/comment/article',
+        name: 'CommentListView',
+        component: () => import('../views/Manage/Child/CommentListView.vue')
+      },
+      {
+        path: '/manage/comment/board',
+        name: 'MessageBoardListView',
+        component: () => import('../views/Manage/Child/MessageBoardView.vue')
+      },
+      {
+        path: '/manage/recycle/article',
+        name: 'ArticleRecycleView',
+        component: () =>import('../views/Manage/Child/ArticleRecycleView.vue')
+      },
+      {
+        path: '/manage/recycle/user',
+        name: 'UserRecycleView',
+        component: () =>import('../views/Manage/Child/UserRecycleView.vue')
+      },
+      {
+        path: '/manage/recycle/comment',
+        name: 'CommentRecycleView',
+        component: () =>import('../views/Manage/Child/CommentRecycleView.vue')
+      }
     ]
   },
   {

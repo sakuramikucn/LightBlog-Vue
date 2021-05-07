@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
+    "dev": "vue-cli-service serve --mode dev",
+    "prod": "vue-cli-service serve --mode prod",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
@@ -11,6 +13,7 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "element-plus": "^1.0.2-beta.36",
+    "moment": "^2.29.1",
     "normalize.css": "^8.0.1",
     "vditor": "^3.8.4",
     "vue": "^3.0.9",
