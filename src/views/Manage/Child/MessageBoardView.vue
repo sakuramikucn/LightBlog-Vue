@@ -328,6 +328,7 @@ export default {
         email: this.comment.email,
         content: this.comment.content,
         type: 2,
+        username: this.me.username
       };
       if(!this.temp.subReference){
         params.subReference = params.parentId

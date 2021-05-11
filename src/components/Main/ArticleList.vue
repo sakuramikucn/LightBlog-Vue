@@ -1,15 +1,45 @@
 <template>
-  <div class="container" v-loading="loading">
-    <el-row
-      v-for="(item, index) in articles"
-      :key="index"
-      type="flex"
-      justify="center"
-    >
-      <el-col>
-        <article-item :data="item" />
-      </el-col>
-    </el-row>
+  <div class="container">
+    <el-skeleton :rows="5" :count="3" animated :loading="loading">
+      <template #template>
+        <div style="padding: 20px; margin-bottom: 10px">
+          <el-skeleton-item
+            variant="h4"
+            style="width: 50%; height: 25px; margin-bottom: 8px"
+          />
+          <el-skeleton-item
+            variant="text"
+            style="height: 25px; margin-bottom: 8px"
+          />
+          <el-skeleton-item
+            variant="text"
+            style="height: 25px; margin-bottom: 8px"
+          />
+          <el-skeleton-item
+            variant="text"
+            style="height: 25px; margin-bottom: 8px"
+          />
+          <el-skeleton-item
+            variant="text"
+            style="height: 25px; margin-bottom: 8px"
+          />
+          <el-skeleton-item variant="text" style="width: 30%; height: 25px" />
+        </div>
+      </template>
+
+      <template #default>
+        <el-row
+          v-for="(item, index) in articles"
+          :key="index"
+          type="flex"
+          justify="center"
+        >
+          <el-col>
+            <article-item :data="item" />
+          </el-col>
+        </el-row>
+      </template>
+    </el-skeleton>
     <el-row>
       <el-col>
         <el-pagination
@@ -17,7 +47,7 @@
           @current-change="handleCurrentChange"
           :current-page="param.page"
           :page-sizes="[5, 10, 20, 50]"
-          :page-size="10"
+          :page-size="param.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
           :hide-on-single-page="true"
@@ -29,45 +59,74 @@
 </template>
 <script>
 import { toRefs, onMounted, reactive } from "vue";
-import { searchArticle } from "../../api/article";
+import { searchArticle, queryByTag } from "../../api/article";
 import ArticleItem from "components/Main/ArticleItem";
 
 export default {
+  name: "ArticleList",
   components: {
     ArticleItem,
   },
-  setup() {
+  props: {
+    params: {
+      type: Object,
+      default: () => {
+        return {
+          page: 1,
+          pageSize: 5,
+          keyword: "",
+          public: true,
+        };
+      },
+    },
+    mode: {
+      type: String,
+      default: "Default",
+    },
+  },
+  setup(props) {
     // 转为响应式数据，类似return data{}
     const state = reactive({
       articles: [],
       loading: false,
-      param: {
-        page: 1,
-        pageSize: 10,
-        keyword: null,
-      },
-      total: 0
+      param: Object.assign({}, props.params),
+      total: 0,
     });
 
     const getData = async () => {
-      state.loading = true
-      await searchArticle(state.param).then((result) => {
-        state.loading = false
-        state.articles = result.content.list;
-        state.total = result.content.total;
-      }).catch(() => {
-        state.loading = false
-      })
+      state.loading = true;
+      const mode = props.mode;
+      if (mode === "Default") {
+        await searchArticle(state.param)
+          .then((result) => {
+            state.loading = false;
+            state.articles = result.content.list;
+            state.total = result.content.total;
+          })
+          .catch(() => {
+            state.loading = false;
+          });
+      } else if (mode === "ForTag") {
+        await queryByTag(state.param)
+          .then((result) => {
+            state.loading = false;
+            state.articles = result.content.list;
+            state.total = result.content.total;
+          })
+          .catch(() => {
+            state.loading = false;
+          });
+      }
     };
 
     const handleSizeChange = (val) => {
       state.param.pageSize = val;
-      getData()
+      getData();
     };
 
     const handleCurrentChange = (val) => {
       state.param.page = val;
-      getData()
+      getData();
     };
 
     onMounted(() => {
@@ -75,7 +134,7 @@ export default {
     });
 
     return { ...toRefs(state), getData, handleSizeChange, handleCurrentChange };
-  }
+  },
 };
 </script>
 

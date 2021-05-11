@@ -8,7 +8,7 @@ export default {
             data: params
         })
     },
-    getTag(id) {
+    get(id) {
         return request({
             url: '/tag/' + id,
             method: 'GET'

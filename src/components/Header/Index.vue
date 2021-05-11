@@ -21,7 +21,7 @@
           </el-tabs>
           <div class="f-jcac">
             <!-- 搜索 -->
-            <div class="search">
+            <div class="search" v-if="isActive === '/index' || isActive === '/'">
               <el-input
                 suffix-icon="el-icon-search"
                 autosize
@@ -87,7 +87,7 @@ export default {
         },
         {
           name: "分类",
-          path: "/category",
+          path: "/category/list",
           icon: "el-icon-collection",
         },
         {
@@ -139,6 +139,7 @@ export default {
 .header {
   border-bottom-color: #dcdfe6;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+  background: #fff;
 
   .title {
     display: block;

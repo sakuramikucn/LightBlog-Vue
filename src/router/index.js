@@ -28,20 +28,20 @@ const homeRoutes = [{
         }
       },
       {
-        path: '/category',
+        path: '/category/list',
         name: 'Category',
         component: () => import('../views/Category/Index.vue'),
         meta: {
           title: '分类 | Light'
         },
-        children: [{
-          path: '/category/:id', //动态路由，具体分类
-          name: 'CategoryDetail',
-          component: () => import('../views/Category/Child/Index.vue'),
-          meta: {
-            title: '分类 | Light'
-          }
-        }]
+      },
+      {
+        path: '/category/:id', //动态路由，具体分类
+        name: 'CategoryDetail',
+        component: () => import('../views/Category/Child/Index.vue'),
+        meta: {
+          title: '分类 | Light'
+        }
       },
       {
         path: '/tags',
@@ -249,7 +249,7 @@ router.beforeEach((to, from, next) => {
 const navs = [
   '/',
   '/tags',
-  '/category',
+  '/category/list',
   '/link',
   '/archives',
   '/message',

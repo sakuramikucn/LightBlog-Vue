@@ -1,20 +1,19 @@
 <template>
   <div class="article-container">
-    <!-- 标题 -->
-    <el-row class="title" type="flex" justify="center">
-      <el-col :md="12">
-        <h2>{{ article.title }}</h2>
-      </el-col>
-      <el-col class="hidden-sm-only" :md="4"></el-col>
-    </el-row>
-
+    <!-- 主内容 -->
     <el-row type="flex" justify="center" :gutter="20">
-      <el-col :sm="24" :md="12">
+      <el-col :sm="24" :md="mdVal">
         <!-- 内容 -->
-        <el-skeleton :rows="10" animated :throttle="500" :loading="loading">
+        <el-skeleton :rows="15" animated :throttle="100" :loading="loading">
           <template #default>
             <el-card class="card">
               <template #header>
+                <!-- 标题 -->
+                <el-row type="flex" justify="center">
+                  <el-col class="title">
+                    <h2>{{ article.title }}</h2>
+                  </el-col>
+                </el-row>
                 <!-- 文章信息 -->
                 <el-row
                   type="flex"
@@ -41,23 +40,32 @@
                 </el-row>
               </template>
               <div class="article-wrap">
+                <!-- 文章内容 -->
                 <section class="article-content">
-                  {{ article.content }}
+                  <div id="preview"></div>
                 </section>
+
+                <!-- 文章底部 -->
                 <div class="article-footer">
-                 
-                  <el-row>
+                  <el-row style="margin-bottom: 10px">
                     <el-col>
-                      <span>文章分类：</span>
-                      <el-tag v-if="article.category">{{article.category.name}}</el-tag>
+                      <i class="el-icon-collection">文章分类：</i>
+                      <el-tag v-if="article.category" size="mini">{{
+                        article.category.name
+                      }}</el-tag>
                     </el-col>
                   </el-row>
-                   <el-row>
+                  <el-row v-if="article.tags">
                     <el-col>
-                      <span>标签：</span>
-                      <div v-if="article.tags.length > 0">
-                        <el-tag v-for="(item,index) in article.tags" :key="index">{{item.name}}</el-tag>
-                      </div>
+                      <i class="el-icon-collection-tag">标签：</i>
+                      <el-tag
+                        v-for="(item, index) in article.tags"
+                        :key="index"
+                        size="mini"
+                        type="success"
+                        style="margin-right: 5px"
+                        >{{ item.name }}</el-tag
+                      >
                     </el-col>
                   </el-row>
                 </div>
@@ -65,45 +73,58 @@
             </el-card>
 
             <!-- 评论 -->
-            <comment :aid="article.id"></comment>
+            <comment
+              :aid="article.id"
+              :type="1"
+              @getCommentSize="getCommentSize"
+            ></comment>
           </template>
         </el-skeleton>
       </el-col>
 
       <!-- 目录栏 -->
-      <el-col class="hidden-sm-only" :md="4">
-        <aside>
-          <el-card>
-            <template #header>
-              <div :style="{ 'text-align': 'center' }">
-                <span>目录</span>
-              </div>
+
+      <el-col class="hidden-sm-only" :md="4" v-if="outlineShow">
+        <el-affix :offset="50">
+          <el-skeleton
+            :rows="8"
+            animated
+            :throttle="100"
+            :loading="outlineLoading"
+          >
+            <template #default>
+              <aside class="outline">
+                <el-card>
+                  <template #header>
+                    <div :style="{ 'text-align': 'center' }">
+                      <span>目录</span>
+                    </div>
+                  </template>
+                  <div id="outline" class="outline-container"></div>
+                </el-card>
+              </aside>
             </template>
-          </el-card>
-        </aside>
+          </el-skeleton>
+        </el-affix>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import { toRefs, reactive } from "vue";
+import { toRefs, reactive, onMounted, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { getArticle } from "api/article";
 import Comment from "components/Comment/Index";
 import { formatDateTime } from "utils/common";
 import { incrementViews, getViews } from "../../api/home";
+import Vditor from "vditor/dist/method.min";
+import "vditor/dist/index.css";
 
 export default {
   name: "Article",
   components: {
     Comment,
-  },
-  emits: {
-    getCommentSize(num) {
-      this.commentNum = num;
-      return true;
-    },
   },
   data() {
     return {
@@ -111,6 +132,9 @@ export default {
     };
   },
   methods: {
+    getCommentSize(num) {
+      this.commentNum = num;
+    },
     format(date) {
       return formatDateTime(date);
     },
@@ -120,20 +144,53 @@ export default {
       article: {},
       loading: false,
       views: 0,
+      outlineLoading: false,
+      outlineShow: true,
+      mdVal: 12,
     });
     const route = useRoute();
     const id = route.params.id;
-    state.loading = true;
 
-    getArticle(id)
-      .then((result) => {
-        state.loading = false;
-        state.article = result.content;
-        document.title = "文章- " + state.article.title + " | Light Blog";
-      })
-      .catch(() => {
-        state.loading = false;
-      });
+    const getData = async () => {
+      state.loading = true;
+      state.outlineLoading = true;
+      // 先获取数据
+      await getArticle(id)
+        .then((result) => {
+          state.loading = false;
+          state.article = result.content;
+          document.title = "文章- " + state.article.title + " | Light Blog";
+        })
+        .catch(() => {
+          state.loading = false;
+        });
+
+      await nextTick();
+
+      // 渲染
+      await Vditor.preview(
+        document.getElementById("preview"),
+        state.article.content,
+        {
+          lazyLoadImage: "loading",
+        }
+      );
+
+      state.outlineLoading = false;
+      await nextTick();
+
+      const html = await Vditor.outlineRender(
+        document.getElementById("preview"),
+        document.getElementById("outline")
+      );
+
+      if (html) {
+        state.outlineShow = true;
+      } else {
+        state.outlineShow = false;
+        state.mdVal = 16;
+      }
+    };
 
     getViews(id).then((resp) => {
       state.views = resp.content;
@@ -142,13 +199,16 @@ export default {
     const incrementView = () => {
       incrementViews(state.article.id).then((resp) => {
         if (resp.code === 0) {
-          state.viwes = resp.content;
+          state.views = resp.content;
         }
       });
     };
 
-    // 页面停留30s算浏览
-    setTimeout(() => incrementView(), 30000);
+    onMounted(() => {
+      getData();
+      // 页面停留60s算浏览
+      setTimeout(() => incrementView(), 60000);
+    });
 
     return { ...toRefs(state) };
   },
@@ -156,17 +216,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-body {
-  background: var(--color-bg);
-}
 .article-container {
   min-height: 85vh;
+  background: var(--color-bg);
 
   padding: 25px 20px;
 
   .title {
     text-align: center;
-    margin-bottom: 20px;
+    padding: 10px 0;
+    color: #666;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 5px;
   }
 
   .card {
@@ -174,14 +235,24 @@ body {
   }
 
   .article-wrap {
-
     .article-content {
       min-height: 30vh;
     }
 
     .article-footer {
-      border-top: 1px #999 solid
+      border-top: 1px #ebeef5 solid;
+      margin: 20px auto;
+      padding: 15px;
     }
+  }
+
+  .outline .vditor-outline {
+    display: inline-block !important;
+  }
+
+  .outline .outline-container {
+    overflow: auto !important;
+    max-height: 80vh;
   }
 }
 </style>

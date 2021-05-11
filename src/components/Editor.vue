@@ -83,10 +83,12 @@ export default {
         position: "right",
       },
       fullscreen: {
-        index: 1000
+        index: 1000,
       },
       after: function () {
-        the.vditor.setValue(the.content);
+        if (the.content){
+          the.vditor.setValue(the.content);
+        }
       },
       input: function (md) {
         the.$emit("input", md);
@@ -103,7 +105,7 @@ export default {
         },
 
         // 上传图片要用的url
-        url: process.env.VUE_APP_BASE_URL + "/upload",
+        url: process.env.VUE_APP_BASE_API_URL + "/upload",
 
         //上传成功时执行
         success(editor, msg) {
@@ -122,6 +124,14 @@ export default {
     };
     const opt = Object.assign(the.options, defaultOpt);
     this.vditor = new Vditor("vditor", opt);
+  },
+  watch: {
+    content(val) {
+      setTimeout(() => {
+        // 得到数据后再渲染
+        this.vditor.setValue(val);
+      }, 200);
+    },
   },
 };
 </script>

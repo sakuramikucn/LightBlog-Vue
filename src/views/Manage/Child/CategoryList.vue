@@ -165,6 +165,7 @@ export default {
         .then((res) => {
           this.loading = false;
           this.data = res.content.list;
+          this.total = res.content.total
         })
         .catch(() => {
           this.loading = false;

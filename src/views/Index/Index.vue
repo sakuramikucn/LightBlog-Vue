@@ -1,6 +1,8 @@
 <template>
   <div>
-    <c-header />
+    <el-affix :z-index="999">
+      <c-header />
+    </el-affix>
     <router-view />
     <c-footer />
   </div>

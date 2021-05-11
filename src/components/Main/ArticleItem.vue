@@ -3,34 +3,46 @@
     <!-- 头部 -->
     <template #header>
       <div class="card-header">
-        <router-link :to="/article/ + data.id" :style="{display: 'flex','justify-content': 'space-between'}">
+        <router-link
+          :to="/article/ + data.id"
+          :style="{ display: 'flex', 'justify-content': 'space-between' }"
+        >
           <h4>{{ data.title }}</h4>
-          <div :style="{color: '#bbb'}">
-            <i class="el-icon-view"></i>&nbsp;{{data.views}}
-            <i class="el-icon-chat-dot-round" :style="{'margin': 'auto 10px'}"></i>{{data.commentNum}}
+          <div :style="{ color: '#bbb' }">
+            <i class="el-icon-view"></i>&nbsp;{{ data.views }}
+            <i
+              class="el-icon-chat-dot-round"
+              :style="{ margin: 'auto 10px' }"
+            ></i
+            >{{ data.commentNum }}
           </div>
         </router-link>
       </div>
     </template>
     <!-- 内容 -->
     <div class="body">
+      <!-- 封面 -->
       <el-image
-        v-if="data.coverUrl !== ''"
+        v-if="data.coverUrl"
         :src="data.coverUrl"
         lazy
         fit="contain"
       >
       </el-image>
-      <pre class="desc">{{ data.desc }}</pre>
+      <!-- 简介 -->
+      <pre class="desc" v-if="data.desc">{{ data.desc }}</pre>
+
       <div class="category-container">
-        <i class="el-icon-collection" :style="{'margin-right': '10px'}"></i>
-        <el-tag
-          size="small"
-          class="category"
-          @click="toCategoryDetail(data.category.id)"
-          v-if="data.category"
-          >{{ data.category.name }}</el-tag
-        >
+        <div>
+          <i class="el-icon-collection" :style="{ 'margin-right': '10px' }"></i>
+          <el-tag
+            size="small"
+            class="category"
+            @click="toCategoryDetail(data.category.id)"
+            v-if="data.category"
+            >{{ data.category.name }}</el-tag
+          >
+        </div>
         <div class="author-container">
           <div>
             <i class="el-icon-date"></i>
@@ -42,13 +54,17 @@
         </div>
       </div>
       <div class="tags">
-        <i class="el-icon-collection-tag" :style="{'margin-right': '10px'}"></i>
+        <i
+          class="el-icon-collection-tag"
+          :style="{ 'margin-right': '10px' }"
+        ></i>
         <el-tag
           type="success"
           v-for="(item, index) in data.tags"
           :key="index"
           size="mini"
           @click="toTagDetail(item.id)"
+          style="margin-right: 5px"
         >
           {{ item.name }}
         </el-tag>
@@ -59,7 +75,7 @@
 
 <script>
 import { useRouter } from "vue-router";
-import {formatDate} from 'utils/common'
+import { formatDate } from "utils/common";
 
 export default {
   name: "ArticleItem",
@@ -98,18 +114,18 @@ export default {
       createTime: Date,
       views: {
         type: Number,
-        default: 0
+        default: 0,
       },
       commentNum: {
         type: Number,
-        default: 0
-      }
+        default: 0,
+      },
     },
   },
   methods: {
     dateFormat(date) {
       const d = new Date(date);
-      return formatDate(d)
+      return formatDate(d);
     },
   },
 };
@@ -121,7 +137,9 @@ export default {
 }
 .desc {
   min-height: 50px;
-  border-bottom: 1px #efefef solid;
+  color: #888;
+  font-size: 12px;
+  // border-bottom: 1px #efefef solid;
 }
 .category-container {
   display: flex;
@@ -129,9 +147,9 @@ export default {
   align-items: center;
   min-height: 40px;
   color: #999;
-  border-bottom: 1px #efefef solid;
+  border-top: 1px #efefef solid;
   .category {
-    margin: 0 10px;
+    margin-right: 10px;
   }
   .author-container {
     display: flex;
@@ -154,5 +172,6 @@ export default {
   min-height: 30px;
   padding: 3px 0;
   color: #999;
+  border-top: 1px #efefef solid;
 }
 </style>

@@ -8,7 +8,7 @@ export default createStore({
     tabs: [],
     activeTabName: '/manage/index',
     tabClosable: true,
-    noKeepAliveComponent: ['EditArticleView']
+    noKeepAliveComponent: ['EditArticleView','Editor']
   },
   mutations: {
     changeTabIndex(state,index){
@@ -22,13 +22,13 @@ export default createStore({
       let flag = false
       state.tabs.forEach(tab => {
         if(tab.name === name){
-          state.activeTabName = name
           flag = true
         }
       })
       if(!flag){
         state.tabs.push(payload)
       }
+      state.activeTabName = name
       if(state.tabs.length > 1){
         state.tabClosable = true
       }

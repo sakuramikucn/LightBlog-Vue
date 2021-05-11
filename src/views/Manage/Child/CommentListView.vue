@@ -71,7 +71,7 @@
       <el-table-column label="ID" prop="comment.id"></el-table-column>
       <el-table-column label="文章" prop="comment.reference">
         <template #default="scope">
-          <el-link>
+          <el-link target="_blank" :href="getUrl(scope.row)">
             <span>{{ getTitle(scope.row.comment.reference) }}</span>
           </el-link>
         </template>
@@ -279,7 +279,6 @@ export default {
       },
       data: [],
       temp: {},
-      me: {},
       comment: {},
       total: 0,
       loading: false,
@@ -350,11 +349,12 @@ export default {
       const params = {
         reference: this.temp.reference,
         parentId: this.temp.id,
-        subReference: this.temp.subReference,
+        subReference: this.temp.subReference ? this.temp.subReference : this.temp.parentId,
         nickName: this.comment.nickName,
         email: this.comment.email,
         content: this.comment.content,
         type: 1,
+        username: this.comment.username
       };
       if(!this.temp.subReference){
         params.subReference = params.parentId
@@ -441,6 +441,9 @@ export default {
         }
       });
     },
+    getUrl(row){
+      return process.env.VUE_APP_BASE_URL+'/article/'+row.comment.reference
+    }
   },
   mounted() {
     this.getData();

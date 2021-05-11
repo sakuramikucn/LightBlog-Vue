@@ -68,3 +68,11 @@ export function restoreArticle(id){
         method: 'put'
     })
 }
+
+export function queryByTag(params){
+    return request({
+        url: '/article/query/tag',
+        method: 'post',
+        data: params
+    })
+}
