@@ -40,7 +40,6 @@ export default {
     };
 
     const getArticles = async () => {
-      console.log("2",state.categoryList);
       for (let i = 0; i < state.categoryList.length; i++) {
       const item = state.categoryList[i];
       const params = {
@@ -80,6 +79,6 @@ export default {
 }
 
 .wrap {
-  margin: 20px auto;
+  margin: 30px auto;
 }
 </style>

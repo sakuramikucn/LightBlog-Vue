@@ -92,8 +92,8 @@
 
     <el-dialog v-model="show" center destroy-on-close width="30%">
       <template #title>
-        <span v-if="isEdit">编辑分类</span>
-        <span v-else>添加权限</span>
+        <span v-if="isEdit">编辑标签</span>
+        <span v-else>添加标签</span>
       </template>
 
       <el-form :model="tag">
@@ -166,6 +166,7 @@ export default {
         .then((res) => {
           this.loading = false;
           this.data = res.content.list;
+          this.total = res.content.total
         })
         .catch(() => {
           this.loading = false;

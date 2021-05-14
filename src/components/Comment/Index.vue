@@ -1,7 +1,7 @@
 <template>
   <div class="comment-coontainer">
     <!-- 评论框 -->
-    <el-card>
+    <el-card v-if="params.type === 1">
       <template #header><h4>评论</h4></template>
       <el-form :model="commentParams" :rules="rules" class="form">
         <el-row type="flex" justify="flex-start" class="info" :gutter="30">
@@ -50,7 +50,17 @@
 
     <el-card class="comment-card">
       <template #header>
-        <h4>{{ total }}条评论</h4>
+        <el-row type="flex" justify="space-between">
+          <el-col :span="4">
+            <h4 v-if="params.type === 1">{{ total }}条评论</h4>
+            <h4 v-else>{{ total }}条留言</h4>
+          </el-col>
+          <el-col :span="2" v-if="params.type === 2">
+            <el-button type="primary" size="mini" @click="openForm"
+              >留言</el-button
+            >
+          </el-col>
+        </el-row>
       </template>
       <ul v-if="comments && comments.length > 0" class="commentList">
         <li v-for="(item, idx) in comments" :key="idx">
@@ -73,6 +83,7 @@
                     icon="el-icon-chat-line-square"
                     :underline="false"
                     @click="openReply(item)"
+                    v-if="params.type === 1"
                   >
                     <span>回复</span>
                   </el-link>
@@ -114,6 +125,7 @@
                       icon="el-icon-chat-line-square"
                       :underline="false"
                       @click="openReply(sub)"
+                      v-if="params.type === 1"
                     >
                       <span>回复</span>
                     </el-link>
@@ -136,12 +148,16 @@
           </ul>
         </li>
       </ul>
-      <el-alert v-else :closable="false" type="info" 
+      <el-alert v-else :closable="false" type="info"
         >还没有评论，赶紧评论吧！</el-alert
       >
     </el-card>
 
-    <el-dialog v-model="show" width="40%" title="回复">
+    <el-dialog v-model="show" width="40%">
+      <template #title>
+        <span v-if="params.type === 1">回复</span>
+        <span v-if="params.type === 2">留言</span>
+      </template>
       <!-- 评论框 -->
       <el-card shadow="never">
         <!-- <template #header><h4>评论</h4></template> -->
@@ -183,8 +199,10 @@
                 size="mini"
                 @click="addComment(selectedComment)"
                 :loading="loading"
-                >评论</el-button
               >
+                <span v-if="params.type === 1">评论</span>
+                <span v-if="params.type === 2">留言</span>
+              </el-button>
             </el-col>
           </el-row>
         </el-form>
@@ -203,11 +221,11 @@ export default {
   props: {
     aid: {
       type: String,
-      required: true,
+      default: "",
     },
     type: {
       type: Number,
-      required: true,
+      default: 1,
     },
   },
   setup(props, context) {
@@ -215,9 +233,9 @@ export default {
       comments: [],
       params: {
         ref: "",
-        type: 1,
+        type: props.type,
       },
-      aid: 0,
+      aid: props.aid,
       commentParams: {
         email: "",
         nickName: "",
@@ -256,16 +274,30 @@ export default {
       state.show = true;
     };
 
+    const openForm = () => {
+      state.show = true;
+      state.selectedComment = null
+    };
+
+    if (state.aid && state.params.type === 1) {
+      state.params.ref = state.aid;
+      getComment();
+    } else {
+      state.aid = 'messagebord'
+      getComment();
+    }
+
     watch(
       () => props.aid,
       (newVal) => {
+        console.log(newVal);
         state.params.ref = newVal;
         state.aid = newVal;
         getComment();
       }
     );
 
-    return { ...toRefs(state), getComment, openReply };
+    return { ...toRefs(state), getComment, openReply, openForm };
   },
   data() {
     return {
@@ -289,23 +321,28 @@ export default {
       setItem("addCommentInfo", addCommentInfo);
 
       this.commentParams.reference = this.aid;
+      console.log(row)
       // 回复评论
       if (row) {
         this.commentParams.parentId = row.comment.id;
         if (row.comment.subReference) {
           // 记一下子引用
-          this.commentParams.subReference = row.comment.subReference
-        }else if(row.comment.parentId){
-          this.commentParams.subReference = row.comment.parentId
+          this.commentParams.subReference = row.comment.subReference;
+        } else if (row.comment.parentId) {
+          this.commentParams.subReference = row.comment.parentId;
         }
       }
       Comment.add(this.commentParams)
         .then((res) => {
           this.loading = false;
           if (res.content) {
-            this.$message.success("回复成功");
+            if(this.params.type === 1){
+              this.$message.success("回复成功");
+            }else{
+              this.$message.success("留言成功");
+            }
             this.selectedComment = {};
-            this.commentParams.content = ''
+            this.commentParams.content = "";
             this.show = false;
             this.getComment();
           } else {

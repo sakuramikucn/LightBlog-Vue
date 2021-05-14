@@ -12,7 +12,7 @@ import {
 
 const request = axios.create({
     baseURL: process.env.VUE_APP_BASE_API_URL,
-    // timeout: 10000,
+    timeout: 10000,
 })
 
 request.interceptors.request.use(
@@ -38,13 +38,13 @@ request.interceptors.response.use(
             if (refresh === 'true') {
                 const token = response.headers['authorization']
                 if (token) {
-                    console.log('移除旧Token', getToken())
+                    // console.log('移除旧Token', getToken())
                     localStorage.removeItem('token')
                     setToken(token)
-                    console.log('更新Token', getToken())
+                    // console.log('更新Token', getToken())
                 }
             }
-            console.log('interceptors.response ==> ', new Date, response)
+            // console.log('interceptors.response ==> ', new Date, response)
             return res
         } else {
             if (res.code === 2002) {

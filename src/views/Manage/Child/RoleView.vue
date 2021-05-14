@@ -185,6 +185,11 @@ export default {
         desc: "",
         rights: [],
       },
+      initRole: {
+        name: "",
+        desc: "",
+        rights: [],
+      },
       total: 0,
       loading: false,
       show: false,
@@ -248,6 +253,7 @@ export default {
     openAdd() {
       this.show = true;
       this.isEdit = false;
+      this.role = Object.assign({},this.initRole)
     },
     add() {
         this.loading = true

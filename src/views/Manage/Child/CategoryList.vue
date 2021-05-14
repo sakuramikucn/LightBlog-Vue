@@ -93,7 +93,7 @@
     <el-dialog v-model="show" center destroy-on-close width="30%">
       <template #title>
         <span v-if="isEdit">编辑分类</span>
-        <span v-else>添加权限</span>
+        <span v-else>添加分类</span>
       </template>
 
       <el-form :model="category">

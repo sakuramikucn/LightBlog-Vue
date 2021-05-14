@@ -166,6 +166,11 @@ export default {
         desc: "",
         rule: 0,
       },
+      initRight: {
+        name: "",
+        desc: "",
+        rule: 1,
+      },
       total: 0,
       loading: false,
       show: false,
@@ -225,6 +230,7 @@ export default {
     openAdd() {
       this.show = true;
       this.isEdit = false;
+      this.right = Object.assign({},this.initRight)
     },
     add() {
       this.loading = true;

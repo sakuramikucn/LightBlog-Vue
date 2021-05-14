@@ -53,7 +53,7 @@ const homeRoutes = [{
       },
       {
         path: '/tag/:id',
-        name: 'Tag',
+        name: 'TagDetail',
         component: () => import('../views/Tag/Child/Index.vue'),
         meta: {
           title: '标签 | Light'
@@ -70,7 +70,7 @@ const homeRoutes = [{
       {
         path: '/message',
         name: 'MessageBoard',
-        component: '../views/Message/Index.vue',
+        component: () => import('../views/Message/Index.vue'),
         meta: {
           title: '留言板 | Light'
         }
@@ -240,6 +240,7 @@ router.beforeEach((to, from, next) => {
   }
   if(isNavPath(path)){
     store.state.isActive = true
+    store.state.currentTabIndex = path
   }else{
     store.state.isActive = false
   }
@@ -248,6 +249,7 @@ router.beforeEach((to, from, next) => {
 
 const navs = [
   '/',
+  '/index',
   '/tags',
   '/category/list',
   '/link',

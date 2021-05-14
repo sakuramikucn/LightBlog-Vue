@@ -40,7 +40,16 @@
       <el-table-column label="名称" prop="name"></el-table-column>
       <el-table-column label="描述" prop="desc"></el-table-column>
       <el-table-column label="链接" prop="url"></el-table-column>
-      <el-table-column label="封面" prop="coverUrl"> </el-table-column>
+      <el-table-column label="封面">
+        <template #default="scope">
+          <el-image
+            :src="scope.row.coverUrl"
+            v-if="scope.row.coverUrl"
+            fit="scale-down"
+            style="width: 100px; height: 100px"
+          ></el-image>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" min-width="90">
         <template #default="scope">
           <span>{{ formatDateTime(scope.row.createTime) }}</span>
@@ -93,13 +102,13 @@
       </el-col>
     </el-row>
 
-    <el-dialog v-model="show" center destroy-on-close width="30%">
+    <el-dialog v-model="show" center width="30%">
       <template #title>
         <span v-if="isEdit">编辑友情链接</span>
         <span v-else>添加友情链接</span>
       </template>
 
-      <el-form :model="link">
+      <el-form :model="link" >
         <el-row>
           <el-col>
             <el-form-item label="名称">
@@ -108,8 +117,7 @@
                 placeholder="名称"
                 size="mini"
                 style="width: 300px"
-              ></el-input
-              ><span v-loading="inputLoading"></span>
+              ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -121,8 +129,7 @@
                 placeholder="描述"
                 size="mini"
                 style="width: 300px"
-              ></el-input
-              ><span v-loading="inputLoading"></span>
+              ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -131,24 +138,29 @@
             <el-form-item label="链接">
               <el-input
                 v-model="link.url"
-                placeholder="url"
+                placeholder="链接"
                 size="mini"
                 style="width: 300px"
-              ></el-input
-              ><span v-loading="inputLoading"></span>
+              ></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
-          <el-col>
-            <el-form-item label="封面">
-              <el-input
-                v-model="link.coverUrl"
-                placeholder="封面"
-                size="mini"
-                style="width: 300px"
-              ></el-input
-              ><span v-loading="inputLoading"></span>
+          <el-col class="fileupload">
+            <el-form-item label="封面"  :class="{hide: isHide}">
+              <el-upload
+                :action="getUrl"
+                :before-upload="handleBeforeUpload"
+                :on-success="handleSuccess"
+                :before-remove="handleBeforeRemove"
+                :on-remove="handleRemove"
+                :on-error="handleUploadError"
+                :file-list="fileList"
+                list-type="picture-card"
+                :headers="token"
+              >
+                <i class="el-icon-plus"></i>
+              </el-upload>
             </el-form-item>
           </el-col>
         </el-row>
@@ -171,7 +183,7 @@
 <script>
 import { Link } from "api/main";
 import { formatDateTime } from "utils/common";
-import qs from 'qs'
+import qs from "qs";
 
 export default {
   name: "LinksView",
@@ -202,6 +214,11 @@ export default {
       saveLoading: false,
       show: false,
       isEdit: true,
+      isHide: false,
+      fileList: [],
+      token: {
+        'Authorization': localStorage.getItem('token')
+      }
     };
   },
   methods: {
@@ -217,23 +234,27 @@ export default {
         });
     },
     remove(id) {
-      this.loading = true;
       Link.delete(id).then((result) => {
         if (result.content) {
-          this.loading = false;
           this.$message.success("操作成功");
           this.getData();
         } else {
-          this.loading = false;
           this.$message.success("操作失败");
         }
       });
     },
     openEdit(index) {
+      this.isHide = false
       const arr = this.data;
       this.link = JSON.parse(JSON.stringify(arr[index]));
       this.show = true;
       this.isEdit = true;
+      this.fileList = []
+      const cover = this.link.coverUrl
+      if(cover){
+        this.fileList.push({url: cover})
+        this.isHide = true
+      }
     },
     edit() {
       this.saveLoading = true;
@@ -251,9 +272,11 @@ export default {
         });
     },
     openAdd() {
+      this.isHide = false
       this.show = true;
       this.isEdit = false;
       this.link = JSON.parse(JSON.stringify(this.init));
+      this.fileList = []
     },
     add() {
       this.saveLoading = true;
@@ -291,6 +314,30 @@ export default {
     handleName(item) {
       return item.name + (item.desc ? "(" + item.desc + ")" : "");
     },
+    handleSuccess(response) {
+      if (response.content) {
+        this.link.coverUrl = response.content;
+        this.fileList.push({ url: response.content });
+      }
+    },
+    handleRemove(){
+      this.fileList.pop()
+      this.link.coverUrl = ''
+    },
+    handleBeforeUpload(){
+      this.isHide = true;
+    },
+    handleBeforeRemove(){
+      this.isHide = false
+    },
+    handleUploadError(){
+      this.isHide = false
+    }
+  },
+  computed: {
+    getUrl() {
+      return process.env.VUE_APP_BASE_API_URL + "/upload";
+    },
   },
   mounted() {
     this.getData();
@@ -298,5 +345,20 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" >
+.fileupload {
+  .el-upload--picture-card {
+    width: 80px !important;
+    height: 80px !important;
+    line-height: 80px !important;
+  }
+
+  .el-upload-list__item {
+    width: 120px !important;
+    height: 100px !important;
+  }
+  .hide .el-upload {
+    display: none;
+  }
+}
 </style>

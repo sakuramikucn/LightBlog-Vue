@@ -3,7 +3,7 @@
     <!-- 内容 -->
     <el-row type="flex" justify="center" class="main">
       <el-col :xs="24" :sm="20" :md="11">
-        <article-list />
+        <article-list :showPage="true"></article-list>
       </el-col>
       <!-- 侧边栏 -->
       <el-col hidden-sm-only :md="5">

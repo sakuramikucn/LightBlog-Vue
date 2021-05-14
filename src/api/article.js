@@ -19,8 +19,8 @@ export function searchArticle(param) {
 
     return request({
         url: '/article/search',
-        method: 'GET',
-        params: param
+        method: 'post',
+        data: param
     })
 }
 
@@ -73,6 +73,21 @@ export function queryByTag(params){
     return request({
         url: '/article/query/tag',
         method: 'post',
+        data: params
+    })
+}
+
+export function archives(){
+    return request({
+        url: '/article/archives',
+        method: 'get'
+    })
+}
+
+export function changeMask(params){
+    return request({
+        url: '/article/mask',
+        method: 'put',
         data: params
     })
 }

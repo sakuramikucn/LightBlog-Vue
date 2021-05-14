@@ -97,6 +97,7 @@
             size="small"
             v-for="item in scope.row.tags"
             :key="item.id"
+            style="margin-right: 5px"
             >{{ item.name }}</el-tag
           >
         </template>
@@ -199,7 +200,7 @@
 
 <script>
 import { toRefs, onMounted, reactive } from "vue";
-import { queryArticle, updateArticle, removeArticle } from "api/article";
+import { queryArticle, changeMask,removeArticle } from "api/article";
 import { formatDateTime, go } from "utils/common";
 
 export default {
@@ -299,7 +300,7 @@ export default {
       if (is) {
         param.public = true;
       }
-      updateArticle(param).then((res) => {
+      changeMask(param).then((res) => {
         if (res.code === 0) {
           if (res.content) {
             this.$message.success("操作成功");

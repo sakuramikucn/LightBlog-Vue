@@ -15,7 +15,7 @@ import { Tag } from "api/main";
 import { queryByTag } from "api/article";
 
 export default {
-  name: "Tag",
+  name: "Tags",
   components: {
     TagList,
   },
@@ -77,6 +77,6 @@ export default {
 }
 
 .wrap {
-  margin: 20px auto;
+  margin: 30px auto;
 }
 </style>

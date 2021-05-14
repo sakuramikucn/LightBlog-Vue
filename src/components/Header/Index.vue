@@ -10,7 +10,7 @@
               v-for="(item, index) in navs"
               :key="index"
               :lazy="true"
-              :name="index + ''"
+              :name="item.path"
             >
               <template #label>
                 <router-link :to="item.path" class="item-content">
@@ -73,7 +73,7 @@ export default {
     return {
       ...toRefs(state),
       tabClick: (tab) => {
-        store.commit("changeTabIndex", tab.index);
+        store.commit("changeTabIndex", tab.props.name);
       },
     };
   },

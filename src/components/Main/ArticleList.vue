@@ -38,9 +38,14 @@
             <article-item :data="item" />
           </el-col>
         </el-row>
+        <el-row type="flex" justify="center" v-if="articles && articles.length === 0">
+          <el-col :md="15">
+            <el-alert  title="无数据" :closable="false" type="info" show-icon> </el-alert>
+          </el-col>
+        </el-row>
       </template>
     </el-skeleton>
-    <el-row>
+    <el-row v-if="showPage">
       <el-col>
         <el-pagination
           @size-change="handleSizeChange"
@@ -50,7 +55,6 @@
           :page-size="param.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
-          :hide-on-single-page="true"
         >
         </el-pagination>
       </el-col>
@@ -83,6 +87,16 @@ export default {
       type: String,
       default: "Default",
     },
+    data: {
+      type: Array,
+      default: () => {
+        return []
+      }
+    },
+    showPage: {
+      type: Boolean,
+      default: false
+    }
   },
   setup(props) {
     // 转为响应式数据，类似return data{}
@@ -130,7 +144,12 @@ export default {
     };
 
     onMounted(() => {
-      getData();
+      if(props.data.length == 0){
+        getData();
+      }else{
+        state.articles = props.data
+        state.total = props.data.length
+      }
     });
 
     return { ...toRefs(state), getData, handleSizeChange, handleCurrentChange };

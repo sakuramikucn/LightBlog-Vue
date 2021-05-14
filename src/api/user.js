@@ -77,3 +77,11 @@ export function restoreUser(id){
         method: 'put'
     })
 }
+
+export function changePassword(params){
+    return request({
+        url: '/user/password',
+        method: 'put',
+        data: params
+    })
+}

@@ -37,5 +37,11 @@ export default {
             url: '/category/'+id,
             method: 'delete'
         })
+    },
+    hot: () => {
+        return request({
+            url: '/category/hot',
+            method: 'get'
+        })
     }
 }

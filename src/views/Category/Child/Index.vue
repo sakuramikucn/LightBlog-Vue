@@ -2,7 +2,7 @@
   <div>
     <el-row type="flex" justify="center" class="container">
       <el-col :md="16">
-        <tag-detail :title="title" :params="params"></tag-detail>
+        <tag-detail :title="title" :params="params" v-if="tag.name"></tag-detail>
       </el-col>
     </el-row>
   </div>
@@ -11,7 +11,7 @@
 <script>
 import TagDetail from "components/TagDetail";
 import { Category } from "api/main";
-import { reactive, nextTick } from "vue";
+import { reactive,toRefs } from "vue";
 import { useRoute } from "vue-router";
 
 export default {
@@ -49,7 +49,7 @@ export default {
       }
     });
 
-    nextTick();
+   return {...toRefs(state)}
   },
 };
 </script>

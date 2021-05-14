@@ -74,6 +74,7 @@
 
             <!-- 评论 -->
             <comment
+              v-if="article.id"
               :aid="article.id"
               :type="1"
               @getCommentSize="getCommentSize"

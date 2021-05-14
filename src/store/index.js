@@ -3,12 +3,13 @@ import createVuexAlong from 'vuex-along'
 
 export default createStore({
   state: {
-    currentTabIndex: '0',
+    currentTabIndex: '/',
     isActive: true,
     tabs: [],
     activeTabName: '/manage/index',
     tabClosable: true,
-    noKeepAliveComponent: ['EditArticleView','Editor']
+    noKeepAliveComponent: ['EditArticleView','Editor'],
+    keepAliveComponent: ['Category','Tags']
   },
   mutations: {
     changeTabIndex(state,index){

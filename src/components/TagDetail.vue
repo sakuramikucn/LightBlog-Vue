@@ -1,24 +1,22 @@
 <template>
   <div>
     <div class="title-c">
-        <el-row type="flex" justify="start" style="title">
+        <el-row type="flex" justify="start" align="middle" class="title">
           <el-col style="text-align: center">
             <h2><i :class="title.icon"></i>{{ title.name }}</h2>
           </el-col>
-         
         </el-row>
     </div>
 
-    <article-list :mode="mode" :params="params"></article-list>
+    <article-list :mode="mode" :params="params" v-if="title.name"></article-list>
   </div>
 </template>
 
 <script>
 import ArticleList from "components/Main/ArticleList";
-import {watch} from 'vue'
 
 export default {
-  name: "TagDetail",
+  name: "CommonTagDetail",
   components: {
     ArticleList,
   },
@@ -48,24 +46,18 @@ export default {
       default: "Default",
     },
   },
-  setup(props) {
-      console.log(props.title)
-      watch(()=>props.title,(val)=>{
-          console.log('22',val)
-      },{deep: true})
-  }
 };
 </script>
 
 <style scoped>
 .title-c {
     margin: 0 200px;
-    height: 50px;
+    height: 44px;
     margin-top: 20px;
     background: #fff;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 .title {
-    
+    height: 44px;
 }
 </style>
