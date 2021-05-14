@@ -92,7 +92,6 @@ export default {
               item.path = "/category/" + item.id;
             }
             this.categorys = arr;
-            console.log(arr)
           }
         })
         .catch(() => (this.categoryLoading = false));

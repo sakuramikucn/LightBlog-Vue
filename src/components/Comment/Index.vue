@@ -276,14 +276,14 @@ export default {
 
     const openForm = () => {
       state.show = true;
-      state.selectedComment = null
+      state.selectedComment = null;
     };
 
     if (state.aid && state.params.type === 1) {
       state.params.ref = state.aid;
       getComment();
     } else {
-      state.aid = 'messagebord'
+      state.aid = "messagebord";
       getComment();
     }
 
@@ -321,7 +321,6 @@ export default {
       setItem("addCommentInfo", addCommentInfo);
 
       this.commentParams.reference = this.aid;
-      console.log(row)
       // 回复评论
       if (row) {
         this.commentParams.parentId = row.comment.id;
@@ -336,13 +335,16 @@ export default {
         .then((res) => {
           this.loading = false;
           if (res.content) {
-            if(this.params.type === 1){
+            if (this.params.type === 1) {
               this.$message.success("回复成功");
-            }else{
+            } else {
               this.$message.success("留言成功");
             }
             this.selectedComment = {};
             this.commentParams.content = "";
+            this.commentParams.reference = "";
+            this.commentParams.parentId = "";
+            this.commentParams.subReference = "";
             this.show = false;
             this.getComment();
           } else {

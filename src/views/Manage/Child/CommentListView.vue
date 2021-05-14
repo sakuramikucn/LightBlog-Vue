@@ -387,7 +387,6 @@ export default {
       });
     },
     handleFilter(val) {
-      console.log(val);
       if (!val) {
         this.options = this.articles;
       }
