@@ -183,7 +183,7 @@ export default {
           this.loading = false;
           this.$message.success("操作失败");
         }
-      });
+      }).catch(()=>this.loading = false)
     },
     openEdit(index) {
       const arr = this.data;

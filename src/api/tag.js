@@ -32,5 +32,11 @@ export default {
             url: '/tag/'+name,
             method: 'post'
         })
+    },
+    delete: id => {
+        return request({
+            url: '/tag/'+id,
+            method: 'delete'
+        })
     }
 }

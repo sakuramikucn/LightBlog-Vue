@@ -338,7 +338,7 @@ export default {
           row.deleteLoading = false;
           this.$message.success("操作失败");
         }
-      });
+      }).catch(()=>this.deleteLoading = false)
     },
     openReply(row) {
       this.temp = row.comment;

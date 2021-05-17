@@ -181,10 +181,11 @@ export default {
   methods: {
     getData() {
       this.loading = true;
-      Right.search()
+      Right.search(this.params)
         .then((res) => {
           this.loading = false;
           this.data = res.content.list;
+          this.total = res.content.total
         })
         .catch(() => {
           this.loading = false;
@@ -201,7 +202,9 @@ export default {
           this.loading = false;
           this.$message.success("操作失败");
         }
-      });
+      }).catch(() => {
+          this.loading = false;
+        });
     },
     openEdit(index) {
       const arr = this.data;
