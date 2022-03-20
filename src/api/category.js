@@ -22,7 +22,7 @@ export default {
     },
     check: name => {
         return request({
-            url: '/category/check/' + name,
+            url: '/category/check?name=' + name,
             method: 'get'
         })
     },
